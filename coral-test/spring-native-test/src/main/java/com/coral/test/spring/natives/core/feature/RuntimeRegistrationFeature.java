@@ -41,21 +41,6 @@ public class RuntimeRegistrationFeature implements Feature {
      */
     private static Set<Class<?>> findClasses(String packageName, Set<Class<?>> superClasses) {
         Set<Class<?>> classes = new HashSet<>();
-//        ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
-//        TypeFilter filter = new AssignableTypeFilter(superClass);
-//
-//        scanner.addIncludeFilter(filter);
-//
-//        String basePackage = ClassUtils.convertClassNameToResourcePath(packageName);
-//        for (BeanDefinition candidate : scanner.findCandidateComponents(basePackage)) {
-//            try {
-//                Class<?> clazz = Class.forName(candidate.getBeanClassName());
-//                classes.add(clazz);
-//            } catch (ClassNotFoundException e) {
-//                e.printStackTrace();
-//                // 处理异常
-//            }
-//        }
         for (Class<?> superClass : superClasses) {
             classes.addAll(ClassUtil.scanPackageBySuper(packageName, superClass));
         }
