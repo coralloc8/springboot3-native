@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="87821c59-3bd2-4db2-bf03-ddddff3247f6" name="Changes" comment="" />
+    <list default="true" id="87821c59-3bd2-4db2-bf03-ddddff3247f6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coral-test/spring-native-test/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/coral-test/spring-native-test/.gitignore" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -259,7 +262,7 @@
       <workItem from="1716773753458" duration="21000" />
       <workItem from="1716963722416" duration="17352000" />
       <workItem from="1717045773921" duration="16352000" />
-      <workItem from="1717115557007" duration="7752000" />
+      <workItem from="1717115557007" duration="7899000" />
     </task>
     <servers />
   </component>
