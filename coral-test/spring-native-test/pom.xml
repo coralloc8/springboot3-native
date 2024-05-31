@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.coral.test</groupId>
+        <artifactId>coral-test</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>spring-native-test</artifactId>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- -->
+        <native-maven-plugin.version>0.10.1</native-maven-plugin.version>
+
+
+        <!-- core start -->
+
+        <!-- -->
+        <knife4j-openapi3.version>4.4.0</knife4j-openapi3.version>
+        <springdoc-openapi.version>2.3.0</springdoc-openapi.version>
+        <!-- -->
+        <cglib.version>3.3.0</cglib.version>
+        <!-- -->
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <!-- -->
+        <hutool.version>5.8.27</hutool.version>
+        <!-- -->
+        <mapstruct.version>1.6.0.Beta1</mapstruct.version>
+        <!-- -->
+        <jakarta.el.api.version>6.0.0-RC1</jakarta.el.api.version>
+        <jakarta.el.version>5.0.0-M1</jakarta.el.version>
+        <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
+        <!-- core end -->
+
+        <!-- 响应式jdbc mysql -->
+        <r2dbc-mysql.version>1.1.2</r2dbc-mysql.version>
+        <r2dbc-proxy.version>1.1.4.RELEASE</r2dbc-proxy.version>
+
+    </properties>
+
+    <dependencies>
+        <!-- core start -->
+
+        <!-- aot 编译需要 start -->
+        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on -->
+        <!--        <dependency>-->
+        <!--            <groupId>org.bouncycastle</groupId>-->
+        <!--            <artifactId>bcprov-jdk18on</artifactId>-->
+        <!--            <version>${bcprov-jdk18on.version}</version>-->
+        <!--        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/jakarta.el/jakarta.el-api -->
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <version>${jakarta.el.api.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+            <version>${jakarta.el.version}</version>
+        </dependency>
+        <!-- aot 编译需要 end -->
+
+        <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-core -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+
+        <!-- aot编译不支持 -->
+        <!-- https://mvnrepository.com/artifact/cglib/cglib -->
+        <!--        <dependency>-->
+        <!--            <groupId>cglib</groupId>-->
+        <!--            <artifactId>cglib</artifactId>-->
+        <!--            <version>${cglib.version}</version>-->
+        <!--        </dependency>-->
+
+        <!-- api文档 start -->
+        <!-- api文档生成 替代springfox -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+            <version>${knife4j-openapi3.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springdoc</groupId>
+                    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+            <version>${springdoc-openapi.version}</version>
+        </dependency>
+
+
+        <!-- api文档 end -->
+
+        <!-- mybatis -->
+        <!--        <dependency>-->
+        <!--            <groupId>com.baomidou</groupId>-->
+        <!--            <artifactId>mybatis-plus-boot-starter</artifactId>-->
+        <!--            <version>${mybatis-plus.version}</version>-->
+        <!--        </dependency>-->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+
+        <!-- core end -->
+        <!-- ####################################################################################### -->
+
+        <!-- 响应式jdbc -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-r2dbc</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.asyncer/r2dbc-mysql -->
+        <dependency>
+            <groupId>io.asyncer</groupId>
+            <artifactId>r2dbc-mysql</artifactId>
+            <version>${r2dbc-mysql.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.r2dbc/r2dbc-proxy -->
+        <dependency>
+            <groupId>io.r2dbc</groupId>
+            <artifactId>r2dbc-proxy</artifactId>
+            <version>${r2dbc-proxy.version}</version>
+        </dependency>
+
+        <!-- nacos配置文件 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
+        <!--        </dependency>-->
+
+        <!-- 配置文件 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+
+        <!-- 私有 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${mapstruct.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <profiles>
+        <!-- dev -->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profileActive>dev</profileActive>
+                <nacos.addr>nacos.zhyx.com:8848</nacos.addr>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+
+    </profiles>
+
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/bootstrap.yml</include>
+                    <include>**/application.yml</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <configuration>
+                    <!-- imageName用于设置生成的二进制文件名称 -->
+                    <imageName>${project.artifactId}</imageName>
+                    <!-- mainClass用于指定main方法类路径 -->
+                    <mainClass>com.coral.test.spring.natives.MainApplication</mainClass>
+                    <!--                    <useArgFile>true</useArgFile>-->
+                    <skip>false</skip>
+                    <!-- 如果要启用调试信息的生成，请在插件配置中提供以下内容-->
+                    <debug>false</debug>
+                    <!--启用详细输出-->
+                    <verbose>false</verbose>
+                    <!--
+                     -H:ConfigurationFileDirectories=：指定配置文件的直接目录，多个项目之间用逗号分隔。在该目录中按默认方式的命名的 json 配置文件都可以被自动识别。
+                     -H:ConfigurationResourceRoots=：指定配置资源的根路径，多个项目之间用逗号分隔。配置文件不仅可以被当作外部文件读取，也可以被当作 resource 资源读取。这种方式适用于读取存放在 jar 文件中的配置文件。
+                     -H:XXXConfigurationFiles=：指定某一种类型的配置文件，多个项目之间用逗号分隔。这里的 XXX 可以是 Reflection、DynamicProxy、Serialization、SerializationDeny、Resource、JNI 或 PredefinedClasses。
+                     -H:XXXConfigurationResources=：指定某一种类型的配置资源的路径，多个项目之间用逗号分隔。这里的 XXX 可以是 Reflection、DynamicProxy、Serialization、SerializationDeny、Resource、JNI 或 PredefinedClasses。
+                     -->
+                    <buildArgs combine.children="append">
+                        <buildArg>
+                            --verbose
+                            -Djavax.xml.accessExternalDTD=all
+                            -Dfile.encoding=UTF-8
+                            -H:+AddAllCharsets
+                            -H:+ReportExceptionStackTraces
+                            <!--                            -H:+PrintClassInitialization-->
+                            --allow-incomplete-classpath
+                            --report-unsupported-elements-at-runtime
+
+                        </buildArg>
+                        <!-- 反射 -->
+                        <buildArg>
+                            -H:ReflectionConfigurationResources=META-INF/native-image/reflect-config.json,META-INF/native-image/com.coral.test/spring-native-test/reflect-config.json
+                            -H:ResourceConfigurationResources=META-INF/native-image/resource-config.json,META-INF/native-image/com.coral.test/spring-native-test/resource-config.json
+                            -H:DynamicProxyConfigurationResources=META-INF/native-image/proxy-config.json,META-INF/native-image/com.coral.test/spring-native-test/proxy-config.json
+                            -H:JNIConfigurationResources=META-INF/native-image/jni-config.json
+                        </buildArg>
+                        <buildArg>
+                            <!-- logback -->
+                            --initialize-at-build-time=ch.qos.logback.core.model.processor.DefaultProcessor$1
+                            --initialize-at-build-time=ch.qos.logback.core.model.processor.ChainedModelFilter$1
+                            --initialize-at-build-time=ch.qos.logback.core.model.processor.ImplicitModelHandler$1
+                            --initialize-at-build-time=ch.qos.logback.core.CoreConstants
+                            --initialize-at-build-time=ch.qos.logback.core.subst.Token
+                            --initialize-at-build-time=ch.qos.logback.core.subst.Parser$1
+                            --initialize-at-build-time=ch.qos.logback.core.subst.NodeToStringTransformer$1
+                            --initialize-at-build-time=ch.qos.logback.core.util.Duration
+                            --initialize-at-build-time=ch.qos.logback.core.util.Loader
+                            --initialize-at-build-time=ch.qos.logback.core.util.StatusPrinter
+                            --initialize-at-build-time=ch.qos.logback.core.status.StatusBase
+                            --initialize-at-build-time=ch.qos.logback.core.status.InfoStatus
+                            --initialize-at-build-time=ch.qos.logback.core.status.WarnStatus
+                            --initialize-at-build-time=ch.qos.logback.classic.Level
+                            --initialize-at-build-time=ch.qos.logback.classic.Logger
+                            --initialize-at-build-time=ch.qos.logback.classic.model.processor.LogbackClassicDefaultNestedComponentRules
+                            <!-- slf4j -->
+                            --initialize-at-build-time=org.apache.log4j.Logger,org.slf4j.LoggerFactory,org.slf4j.MDC,org.slf4j.impl.StaticLoggerBinder
+                            <!-- netty -->
+                            --initialize-at-run-time=io.netty.handler.codec.http2.CleartextHttp2ServerUpgradeHandler,io.netty.handler.codec.http2.Http2ServerUpgradeCodec
+                            <!-- -->
+                            --initialize-at-run-time=sun.net.dns.ResolverConfigurationImpl
+                            --initialize-at-build-time=cn.hutool.core.util.ClassLoaderUtil
+                            --initialize-at-build-time=cn.hutool.core.convert.BasicType
+                            --initialize-at-build-time=cn.hutool.core.util.CharsetUtil
+                            <!-- features -->
+                            --features=com.coral.test.spring.natives.core.feature.RuntimeRegistrationFeature
+                        </buildArg>
+                        <buildArg>
+                            --add-opens java.base/java.lang=ALL-UNNAMED
+                            --add-opens java.base/java.io=ALL-UNNAMED
+                            --add-opens java.base/java.math=ALL-UNNAMED
+                            --add-opens java.base/java.net=ALL-UNNAMED
+                            --add-opens java.base/java.nio=ALL-UNNAMED
+                            --add-opens java.base/java.security=ALL-UNNAMED
+                            --add-opens java.base/java.text=ALL-UNNAMED
+                            --add-opens java.base/java.time=ALL-UNNAMED
+                            --add-opens java.base/java.util=ALL-UNNAMED
+                            --add-opens java.base/jdk.internal.access=ALL-UNNAMED
+                            --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
+                        </buildArg>
+                    </buildArgs>
+                </configuration>
+
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <jvmArguments>
+                        -Dfile.encoding=UTF-8
+                        --add-opens java.base/java.lang=ALL-UNNAMED
+                        --add-opens java.base/java.io=ALL-UNNAMED
+                        --add-opens java.base/java.math=ALL-UNNAMED
+                        --add-opens java.base/java.net=ALL-UNNAMED
+                        --add-opens java.base/java.nio=ALL-UNNAMED
+                        --add-opens java.base/java.security=ALL-UNNAMED
+                        --add-opens java.base/java.text=ALL-UNNAMED
+                        --add-opens java.base/java.time=ALL-UNNAMED
+                        --add-opens java.base/java.util=ALL-UNNAMED
+                        --add-opens java.base/jdk.internal.access=ALL-UNNAMED
+                        --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
+                        -agentlib:native-image-agent=config-merge-dir=src/main/resources/META-INF/native-image/
+                    </jvmArguments>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

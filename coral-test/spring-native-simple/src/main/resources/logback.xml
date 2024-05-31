@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<configuration debug="false">
+    <contextName>spring-native-test</contextName>
+    <!--项目名 -->
+    <property name="logback.project.name" value="spring-native-test"/>
+    <!--日志路径-->
+    <property name="logback.file.path" value="logs/"/>
+    <!--输出日志格式-->
+    <!--<property name="logback.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{traceId}] %logger - %msg%n"/>-->
+    <property name="logback.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t-%L] %-5level [%X{traceId}] %logger{36} %L %M - %msg%xEx%n"/>
+    <!--日志文件名的日期格式 -->
+    <timestamp key="byDay" datePattern="yyyyMMdd"/>
+    <!-- 控制台日志 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder charset="UTF-8">
+            <pattern>${logback.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!--debug-->
+    <appender name="FILE-DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender" additivity="false">
+        <!-- 过滤器，一个appender可以有多个 -->
+        <!-- 阈值过滤，就是log行为级别过滤，info的信息会被打印出来 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <File>${logback.file.path}/debug.log</File>
+        <encoder charset="UTF-8">
+            <pattern>${logback.pattern}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logback.file.path}/file-debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>6GB</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>200MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!--info-->
+    <appender name="FILE-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender" additivity="false">
+        <!-- 过滤器，一个appender可以有多个 -->
+        <!-- 阈值过滤，就是log行为级别过滤，info的信息会被打印出来 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <File>${logback.file.path}/info.log</File>
+        <encoder charset="UTF-8">
+            <pattern>${logback.pattern}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logback.file.path}/file-info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>6GB</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>200MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!--error-->
+    <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender" additivity="false">
+        <!-- 过滤器，一个appender可以有多个 -->
+        <!-- 阈值过滤，就是log行为级别过滤，debug及debug以上的信息会被打印出来 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <File>${logback.file.path}/error.log</File>
+        <encoder charset="UTF-8">
+            <pattern>${logback.pattern}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logback.file.path}/file-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>6GB</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>200MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!--测试环境-->
+    <springProfile name="dev">
+        <property name="logback.log.level" value="DEBUG"/>
+    </springProfile>
+    <!--生产环境-->
+    <springProfile name="prod">
+        <property name="logback.log.level" value="INFO"/>
+    </springProfile>
+
+    <!--只打印jmq和jsf的ERROR日志-->
+    <logger name="org.apache.zookeeper" level="ERROR"/>
+    <logger name="org.quartz.core" level="ERROR"/>
+    <logger name="org.springframework.r2dbc" level="debug"/>
+    <logger name="org.springframework.data.r2dbc" level="debug"/>
+    <logger name="io.r2dbc" level="debug"/>
+    <logger name="java.sql" level="debug"/>
+    <logger name="org.mybatis" level="debug"/>
+
+    <!--测试环境-->
+    <springProfile name="dev">
+        <property name="logback.log.level" value="info"/>
+        <root level="${logback.log.level}">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE-DEBUG"/>
+            <appender-ref ref="FILE-INFO"/>
+            <appender-ref ref="FILE-ERROR"/>
+        </root>
+    </springProfile>
+    <!--生产环境-->
+    <springProfile name="prod">
+        <property name="logback.log.level" value="INFO"/>
+        <root level="${logback.log.level}">
+            <appender-ref ref="FILE-DEBUG"/>
+            <appender-ref ref="FILE-INFO"/>
+            <appender-ref ref="FILE-ERROR"/>
+        </root>
+    </springProfile>
+</configuration>

@@ -1,0 +1,61 @@
+info:
+  author: huss
+  date: 2024年03月28号
+  remark: spring-simple-test 测试
+  my-server-name: spring-simple-test
+
+spring:
+  application:
+    name: ${info.my-server-name}
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true
+  main:
+    allow-bean-definition-overriding: true
+  jackson:
+    data-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  aop:
+    auto: true
+    proxy-target-class: true
+  http:
+    encoding:
+      enable: true
+
+
+# 监控
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name}
+
+# openapi 文档配置
+springdoc:
+  version: 1.0.0
+  name: spring-simple接口文档
+  description: spring-simple接口文档
+  url: http://localhost:${server.port}${server.servlet.context-path}/doc.html
+  groups:
+    - group: api
+      # 多个,分割
+      packagesToScan: com.coral.test.spring.simple.controller
+      # 多个,分割
+      packagesToExclude:
+      tags:
+        - name: 1.0.0
+          desc: 测试
+
+
+
+
+
+

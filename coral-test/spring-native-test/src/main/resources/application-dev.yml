@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+#数据库配置
+db:
+  host: ${coral.datasource.url:192.168.29.66:3306}
+  name: testdb
+  username: ${coral.datasource.username:zhyx}
+  password: ${coral.datasource.password:zhyx}
+
+
+
+spring:
+  r2dbc:
+    username: ${db.username}
+    password: ${db.password}
+    url: r2dbc:mysql://${db.host}/${db.name}?serverZoneId=Asia/Shanghai
+    name: ${db.name}
+    pool:
+      initial-size: 50
+      max-size: 100
+      enabled: true
+
+
+# doc文档
+springdoc:
+  # 是否启用doc 生产环境在外网的话可以选择关闭该功能
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    #自定义swagger前端请求路径，输入http：127.0.0.1:8080/doc 会自动重定向到swagger页面
+    # path: /doc
+    # 不显示默认示例
+    disable-swagger-default-url: true

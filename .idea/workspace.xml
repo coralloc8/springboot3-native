@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="87821c59-3bd2-4db2-bf03-ddddff3247f6" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="alwaysUpdateSnapshots" value="true" />
+        <option name="localRepository" value="C:\Software\Java\m2\repository" />
+        <option name="mavenHome" value="$PROJECT_DIR$/../../../../apache-maven-3.9.1" />
+        <option name="useMavenConfig" value="true" />
+        <option name="userSettingsFile" value="C:\Software\apache-maven-3.9.1\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="enabledProfiles">
+      <list>
+        <option value="nexus" />
+        <option value="dev" />
+        <option value="native" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="2eJ2H0iGp6j7atO1XyXVxgcxLGT" />
+  <component name="ProjectViewState">
+    <option name="flattenModules" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "ToolWindowRun.ShowToolbar": "false",
+    "WebServerToolWindowFactoryState": "false",
+    "jdk.selected.JAVA_MODULE": "17_graalvm",
+    "last_directory_selection": "C:/Software/projects/mine/java/springboot3/coral-test/spring-native-simple/src/test/java",
+    "last_opened_file_path": "C:/Software/projects/mine/java/springboot3/coral-test/spring-native-test/src/main/resources/static",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Problems",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.19963032",
+    "settings.editor.selected.configurable": "File.Encoding",
+    "spring.configuration.checksum": "82e0cce98562e3b29655e1d45e097e76",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Software\projects\mine\java\springboot3\coral-test\spring-native-test\src\main\resources\static" />
+      <recent name="C:\Software\projects\mine\java\springboot3\coral-test\spring-native-test\src\main\resources\META-INF\native-image" />
+      <recent name="C:\Software\projects\mine\java\springboot3\coral-test\spring-native-test\src\main\resources" />
+      <recent name="C:\Software\projects\mine\java\springboot3\coral-test\spring-native-test\target\classes\static" />
+      <recent name="C:\Software\projects\mine\java\springboot3\coral-test\spring-native-test\target\classes\META-INF\native-image\com.coral.test\spring-native-test" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Software\projects\mine\java\springboot3\coral-test\spring-native-test\src\main\resources" />
+      <recent name="C:\Software\projects\mine\java\springboot3\coral-test\spring-native-test\src\main\resources\config\dev" />
+      <recent name="C:\Software\projects\mine\java\springboot3\coral-test\spring-native-simple\src\main\resources\META-INF.native-image\com.coral.test\spring-native-simple" />
+      <recent name="C:\Software\projects\mine\java\springboot3\coral-test\spring-native-test\src\main\resources\META-INF.native-image" />
+      <recent name="C:\Software\projects\mine\java\springboot3\coral-test\spring-native-test\src\main\resources\static" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.coral.test.spring.simple.convert" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.coral.test.spring.natives.repository" />
+      <recent name="com.coral.test.spring.natives.service" />
+      <recent name="com.coral.test.spring.simple.repository" />
+      <recent name="com.coral.test.spring.simple.config" />
+      <recent name="com.coral.test.spring.simple" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.MainApplication">
+    <configuration name="ReactiveHttpContextHolder" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.coral.test.spring.natives.core.web.filter.ReactiveHttpContextHolder" />
+      <module name="spring-native-test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.coral.test.spring.natives.core.web.filter.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RuntimeRegistrationFeature" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.coral.test.spring.simple.core.feature.RuntimeRegistrationFeature" />
+      <module name="spring-native-simple" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.coral.test.spring.simple.core.feature.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="spring-native-test-1.0.0-SNAPSHOT.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/coral-test/spring-native-test/target/spring-native-test-1.0.0-SNAPSHOT.jar" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="springboot3" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="springboot3" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="spring-native-test [spring-boot:process-aot]" type="MavenRunConfiguration" factoryName="Maven" temporary="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="spring-boot:process-aot" />
+              </list>
+            </option>
+            <option name="pomFileName" value="pom.xml" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$/coral-test/spring-native-test" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <configuration name="MainApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true">
+      <module name="spring-native-test" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.coral.test.spring.natives.MainApplication" />
+      <option name="VM_PARAMETERS" value="--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.math=ALL-UNNAMED --add-opens java.base/java.net=ALL-UNNAMED --add-opens java.base/java.nio=ALL-UNNAMED --add-opens java.base/java.security=ALL-UNNAMED --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.base/java.time=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/jdk.internal.access=ALL-UNNAMED --add-opens java.base/jdk.internal.misc=ALL-UNNAMED" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.coral.test.spring.natives.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MainApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="spring-native-test" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.coral.test.spring.natives.MainApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SimpleMainApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="spring-native-simple" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.coral.test.spring.simple.SimpleMainApplication" />
+      <option name="VM_PARAMETERS" value="--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.math=ALL-UNNAMED --add-opens java.base/java.net=ALL-UNNAMED --add-opens java.base/java.nio=ALL-UNNAMED --add-opens java.base/java.security=ALL-UNNAMED --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.base/java.time=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/jdk.internal.access=ALL-UNNAMED --add-opens java.base/jdk.internal.misc=ALL-UNNAMED" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.RuntimeRegistrationFeature" />
+      <item itemvalue="Application.ReactiveHttpContextHolder" />
+      <item itemvalue="JAR Application.spring-native-test-1.0.0-SNAPSHOT.jar" />
+      <item itemvalue="Maven.spring-native-test [spring-boot:process-aot]" />
+      <item itemvalue="Spring Boot.SimpleMainApplication" />
+      <item itemvalue="Spring Boot.MainApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.MainApplication" />
+        <item itemvalue="Maven.spring-native-test [spring-boot:process-aot]" />
+        <item itemvalue="Application.RuntimeRegistrationFeature" />
+        <item itemvalue="Application.ReactiveHttpContextHolder" />
+        <item itemvalue="Spring Boot.MainApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="87821c59-3bd2-4db2-bf03-ddddff3247f6" name="Changes" comment="" />
+      <created>1683180171564</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1683180171564</updated>
+      <workItem from="1711608270926" duration="957000" />
+      <workItem from="1711609237828" duration="6859000" />
+      <workItem from="1711625636524" duration="2011000" />
+      <workItem from="1711677347670" duration="12090000" />
+      <workItem from="1711699476645" duration="21495000" />
+      <workItem from="1711949535099" duration="738000" />
+      <workItem from="1711950290790" duration="43593000" />
+      <workItem from="1712104080613" duration="29931000" />
+      <workItem from="1712564084143" duration="36265000" />
+      <workItem from="1712795434466" duration="5957000" />
+      <workItem from="1712801581663" duration="12508000" />
+      <workItem from="1712882292379" duration="27709000" />
+      <workItem from="1713158491582" duration="27372000" />
+      <workItem from="1713246125417" duration="50296000" />
+      <workItem from="1713435892973" duration="53195000" />
+      <workItem from="1714005328888" duration="736000" />
+      <workItem from="1715255490807" duration="2800000" />
+      <workItem from="1716185463334" duration="17556000" />
+      <workItem from="1716340997533" duration="18649000" />
+      <workItem from="1716446062648" duration="616000" />
+      <workItem from="1716446828410" duration="16827000" />
+      <workItem from="1716517598145" duration="7008000" />
+      <workItem from="1716773753458" duration="21000" />
+      <workItem from="1716963722416" duration="17352000" />
+      <workItem from="1717045773921" duration="16352000" />
+      <workItem from="1717115557007" duration="7752000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/coral-test/spring-native-test/src/main/java/com/coral/test/spring/natives/repository/EventLogCustomRepositoryImpl.java</url>
+          <line>43</line>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/coral-test/spring-native-test/src/main/java/com/coral/test/spring/natives/core/web/convert/IntegerToEnumConverterFactory.java</url>
+          <line>35</line>
+          <option name="timeStamp" value="45" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-r2dbc/3.2.4/spring-data-r2dbc-3.2.4-sources.jar!/org/springframework/data/r2dbc/core/R2dbcEntityTemplate.java</url>
+          <line>310</line>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-r2dbc/3.2.4/spring-data-r2dbc-3.2.4-sources.jar!/org/springframework/data/r2dbc/core/R2dbcEntityTemplate.java</url>
+          <line>321</line>
+          <option name="timeStamp" value="53" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-r2dbc/3.2.4/spring-data-r2dbc-3.2.4-sources.jar!/org/springframework/data/r2dbc/core/R2dbcEntityTemplate.java</url>
+          <line>335</line>
+          <option name="timeStamp" value="54" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/coral-test/spring-native-test/src/main/java/com/coral/test/spring/natives/config/R2dbcConfig.java</url>
+          <line>103</line>
+          <option name="timeStamp" value="55" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/coral-test/spring-native-test/src/main/java/com/coral/test/spring/natives/repository/EventLogCustomRepositoryImpl.java</url>
+          <line>81</line>
+          <option name="timeStamp" value="57" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-autoconfigure/3.2.4/spring-boot-autoconfigure-3.2.4-sources.jar!/org/springframework/boot/autoconfigure/r2dbc/R2dbcConnectionDetails.java</url>
+          <option name="timeStamp" value="65" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/com/alibaba/cloud/spring-cloud-starter-alibaba-nacos-config/2021.0.4.0/spring-cloud-starter-alibaba-nacos-config-2021.0.4.0-sources.jar!/com/alibaba/cloud/nacos/NacosConfigAutoConfiguration.java</url>
+          <line>71</line>
+          <option name="timeStamp" value="67" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/com/alibaba/cloud/spring-cloud-starter-alibaba-nacos-config/2021.0.4.0/spring-cloud-starter-alibaba-nacos-config-2021.0.4.0-sources.jar!/com/alibaba/cloud/nacos/NacosConfigAutoConfiguration.java</url>
+          <line>61</line>
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/com/alibaba/cloud/spring-cloud-starter-alibaba-nacos-config/2021.0.4.0/spring-cloud-starter-alibaba-nacos-config-2021.0.4.0-sources.jar!/com/alibaba/cloud/nacos/NacosConfigAutoConfiguration.java</url>
+          <line>81</line>
+          <option name="timeStamp" value="70" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/coral-test/spring-native-test/src/main/java/com/coral/test/spring/natives/config/NativeProperty.java</url>
+          <line>31</line>
+          <option name="timeStamp" value="72" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/com/alibaba/cloud/spring-cloud-starter-alibaba-nacos-config/2021.0.4.0/spring-cloud-starter-alibaba-nacos-config-2021.0.4.0-sources.jar!/com/alibaba/cloud/nacos/NacosConfigAutoConfiguration.java</url>
+          <line>44</line>
+          <option name="timeStamp" value="74" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/com/alibaba/cloud/spring-cloud-starter-alibaba-nacos-config/2021.0.4.0/spring-cloud-starter-alibaba-nacos-config-2021.0.4.0-sources.jar!/com/alibaba/cloud/nacos/NacosConfigAutoConfiguration.java</url>
+          <line>55</line>
+          <option name="timeStamp" value="75" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/coral-test/spring-native-test/src/main/java/com/coral/test/spring/natives/core/r2dbc/SQLFactory.java</url>
+          <line>171</line>
+          <option name="timeStamp" value="77" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/springframework/spring-context/6.1.5/spring-context-6.1.5-sources.jar!/org/springframework/context/support/AbstractApplicationContext.java</url>
+          <line>586</line>
+          <option name="timeStamp" value="78" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/3.2.4/spring-boot-3.2.4-sources.jar!/org/springframework/boot/SpringApplication.java</url>
+          <line>287</line>
+          <option name="timeStamp" value="79" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/3.2.4/spring-boot-3.2.4-sources.jar!/org/springframework/boot/SpringApplication.java</url>
+          <line>317</line>
+          <option name="timeStamp" value="80" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/3.2.4/spring-boot-3.2.4-sources.jar!/org/springframework/boot/web/reactive/context/ReactiveWebServerApplicationContext.java</url>
+          <line>80</line>
+          <option name="timeStamp" value="82" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-autoconfigure/3.2.4/spring-boot-autoconfigure-3.2.4-sources.jar!/org/springframework/boot/autoconfigure/web/reactive/ReactiveWebServerFactoryConfiguration.java</url>
+          <line>64</line>
+          <option name="timeStamp" value="83" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/coral-test/spring-native-test/src/main/java/com/coral/test/spring/natives/dto/PageInfo.java</url>
+          <line>38</line>
+          <properties class="com.coral.test.spring.natives.dto.PageInfo" method="&lt;init&gt;">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

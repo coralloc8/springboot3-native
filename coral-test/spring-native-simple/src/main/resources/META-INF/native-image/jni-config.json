@@ -1,0 +1,42 @@
+[
+  {
+    "name": "sun.management.VMManagementImpl",
+    "fields": [
+      {
+        "name": "compTimeMonitoringSupport"
+      },
+      {
+        "name": "currentThreadCpuTimeSupport"
+      },
+      {
+        "name": "objectMonitorUsageSupport"
+      },
+      {
+        "name": "otherThreadCpuTimeSupport"
+      },
+      {
+        "name": "remoteDiagnosticCommandsSupport"
+      },
+      {
+        "name": "synchronizerUsageSupport"
+      },
+      {
+        "name": "threadAllocatedMemorySupport"
+      },
+      {
+        "name": "threadContentionMonitoringSupport"
+      }
+    ]
+  },
+  {
+    "name": "sun.net.dns.ResolverConfigurationImpl",
+    "fields": [
+      {
+        "name": "os_searchlist"
+      },
+      {
+        "name": "os_nameservers"
+      }
+    ]
+  }
+]

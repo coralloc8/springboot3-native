@@ -1,0 +1,94 @@
+info:
+  author: huss
+  date: 2024年04月18日
+  remark: spring-native-test
+  my-server-name: spring-native-test
+
+spring:
+  application:
+    name: ${info.my-server-name}
+  profiles:
+    active: @profileActive@
+  main:
+    allow-bean-definition-overriding: true
+  devtools:
+    restart:
+      enabled: true
+  jackson:
+    data-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  aop:
+    auto: true
+    proxy-target-class: true
+  http:
+    encoding:
+      enable: true
+
+  # 远端配置
+  config:
+    import:
+      - optional:nacos:${spring.cloud.nacos.config.prefix}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}?preference=remote
+  #nacos配置
+  cloud:
+    config:
+      discovery:
+        enabled: true
+    discovery:
+      enabled: false
+    nacos:
+      config:
+        server-addr: @nacos.addr@ #nacos中心地址
+        file-extension: yaml # 配置文件格式
+        prefix: config
+        namespace: spring-native
+        username: nacos
+        password: zhyx1202
+        group: DEFAULT_GROUP
+        encode: UTF-8
+        enabled: true
+        preference: remote
+    # nacos 注册中心
+#    discovery:
+#      server-addr: @nacos.addr@ #nacos中心地址
+#      group: @nacos.group@
+#      username: nacos
+#      password: zhyx1202
+#      namespace: survey #survey
+#      heart-beat-interval: 2000  # 该实例在客户端上报心跳的间隔时间（毫秒）
+#      heart-beat-timeout: 7000   # 该实例在不发送心跳后，从健康到不健康的时间（毫秒）
+#      ip-delete-timeout: 15000   # 该实例在不发送心跳后，被 nacos下掉该实例的时间（毫秒）
+
+# 监控
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name}
+
+# openapi 文档配置
+springdoc:
+  version: 1.0.0
+  name: spring-native接口文档
+  description: spring-native接口文档
+  url: http://localhost:${server.port}${server.servlet.context-path}/doc.html
+  groups:
+    - group: api
+      # 多个,分割
+      packagesToScan: com.coral.test.spring.natives.controller
+      # 多个,分割
+      packagesToExclude:
+      tags:
+        - name: 1.0.0
+          desc: 测试
+
+
+
+
+
+
