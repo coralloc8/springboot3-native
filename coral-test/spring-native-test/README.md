@@ -37,7 +37,30 @@ java -Dspring.aot.enabled=true -agentlib:native-image-agent=config-output-dir=./
 `
 
 # aot springcloud 注意事项
-![img_6.png](static/img_6.png)
+![img_6.png](recources/img_6.png)
 
 # 编译配置
 https://www.graalvm.org/jdk17/reference-manual/native-image/overview/BuildOptions/
+
+
+
+
+# SQL相关信息
+
+https://docs.spring.io/spring-data/r2dbc/docs/current-SNAPSHOT/reference/html/#r2dbc.core
+
+# SQL格式
+![img.png](recources/img.png)
+![img_1.png](recources/img_1.png)
+
+# 多数据源
+![img_2.png](recources/img_2.png)
+
+# Mapping
+![img_3.png](recources/img_3.png)
+
+![img_4.png](recources/img_4.png)
+
+
+![img_5.png](recources/img_5.png)
+
