@@ -3,6 +3,9 @@
     "interfaces":["com.coral.test.spring.natives.repository.EventLogRepository","org.springframework.data.repository.Repository","org.springframework.transaction.interceptor.TransactionalProxy","org.springframework.aop.framework.Advised","org.springframework.core.DecoratingProxy"]
   },
   {
+    "interfaces":["io.lettuce.core.api.sync.RedisCommands","io.lettuce.core.cluster.api.sync.RedisClusterCommands"]
+  },
+  {
     "interfaces":["io.r2dbc.spi.Connection","io.r2dbc.spi.Wrapped"]
   },
   {
@@ -34,6 +37,9 @@
   },
   {
     "interfaces":["org.springframework.boot.context.properties.ConfigurationProperties"]
+  },
+  {
+    "interfaces":["org.springframework.cache.annotation.Cacheable"]
   },
   {
     "interfaces":["org.springframework.data.relational.core.mapping.Table"]

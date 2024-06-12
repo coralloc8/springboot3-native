@@ -287,7 +287,7 @@
                             <!--                            -H:+PrintClassInitialization-->
                             --allow-incomplete-classpath
                             --report-unsupported-elements-at-runtime
-
+                            --enable-monitoring=jfr
                         </buildArg>
                         <!-- 反射 -->
                         <buildArg>
@@ -327,6 +327,7 @@
                             --features=com.coral.test.spring.natives.core.feature.RuntimeRegistrationFeature
                         </buildArg>
                         <buildArg>
+                            --add-reads jdk.jfr=ALL-UNNAMED
                             --add-opens java.base/java.lang=ALL-UNNAMED
                             --add-opens java.base/java.io=ALL-UNNAMED
                             --add-opens java.base/java.math=ALL-UNNAMED
@@ -349,6 +350,7 @@
                 <configuration>
                     <jvmArguments>
                         -Dfile.encoding=UTF-8
+                        --add-reads jdk.jfr=ALL-UNNAMED
                         --add-opens java.base/java.lang=ALL-UNNAMED
                         --add-opens java.base/java.io=ALL-UNNAMED
                         --add-opens java.base/java.math=ALL-UNNAMED

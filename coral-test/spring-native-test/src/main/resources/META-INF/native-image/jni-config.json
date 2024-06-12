@@ -22,6 +22,10 @@
   "methods":[{"name":"asList","parameterTypes":["java.lang.Object[]"] }]
 },
 {
+  "name":"jdk.jfr.internal.JVM",
+  "fields":[{"name":"os_nameservers"}, {"name":"os_searchlist"}]
+},
+{
   "name":"sun.management.VMManagementImpl",
   "fields":[{"name":"compTimeMonitoringSupport"}, {"name":"currentThreadCpuTimeSupport"}, {"name":"objectMonitorUsageSupport"}, {"name":"otherThreadCpuTimeSupport"}, {"name":"remoteDiagnosticCommandsSupport"}, {"name":"synchronizerUsageSupport"}, {"name":"threadAllocatedMemorySupport"}, {"name":"threadContentionMonitoringSupport"}]
 },

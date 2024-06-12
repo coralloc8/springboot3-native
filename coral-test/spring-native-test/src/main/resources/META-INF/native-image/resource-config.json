@@ -103,6 +103,8 @@
   }, {
     "pattern":"\\Qcom/coral/test/spring/natives/config/ReactiveTransactionConfig.class\\E"
   }, {
+    "pattern":"\\Qcom/coral/test/spring/natives/config/RedisConfig.class\\E"
+  }, {
     "pattern":"\\Qcom/coral/test/spring/natives/config/WebFluxConfig.class\\E"
   }, {
     "pattern":"\\Qcom/coral/test/spring/natives/config/\\E"
@@ -367,9 +369,13 @@
   }, {
     "pattern":"\\Qorg/springframework/boot/autoconfigure/cache/CacheAutoConfiguration.class\\E"
   }, {
+    "pattern":"\\Qorg/springframework/boot/autoconfigure/cache/CacheProperties.class\\E"
+  }, {
     "pattern":"\\Qorg/springframework/boot/autoconfigure/cache/GenericCacheConfiguration.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/boot/autoconfigure/cache/NoOpCacheConfiguration.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/boot/autoconfigure/cache/RedisCacheConfiguration.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/boot/autoconfigure/cache/SimpleCacheConfiguration.class\\E"
   }, {
@@ -406,6 +412,24 @@
     "pattern":"\\Qorg/springframework/boot/autoconfigure/data/r2dbc/R2dbcRepositoriesAutoConfiguration.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/boot/autoconfigure/data/r2dbc/R2dbcRepositoriesAutoConfigureRegistrar.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/boot/autoconfigure/data/redis/JedisConnectionConfiguration.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/boot/autoconfigure/data/redis/LettuceConnectionConfiguration$PoolBuilderFactory.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/boot/autoconfigure/data/redis/LettuceConnectionConfiguration.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/boot/autoconfigure/data/redis/RedisAutoConfiguration.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/boot/autoconfigure/data/redis/RedisConnectionConfiguration$ConnectionInfo.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/boot/autoconfigure/data/redis/RedisConnectionConfiguration.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/boot/autoconfigure/data/redis/RedisReactiveAutoConfiguration.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/boot/autoconfigure/data/redis/RedisRepositoriesAutoConfiguration.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/boot/autoconfigure/data/redis/RedisRepositoriesRegistrar.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/boot/autoconfigure/http/HttpMessageConvertersAutoConfiguration$NotReactiveWebApplicationCondition$ReactiveWebApplication.class\\E"
   }, {
@@ -482,6 +506,8 @@
     "pattern":"\\Qorg/springframework/boot/autoconfigure/jdbc/metadata/DataSourcePoolMetadataProvidersConfiguration.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/boot/autoconfigure/jmx/JmxAutoConfiguration.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/boot/autoconfigure/mail/MailSenderValidatorAutoConfiguration.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/boot/autoconfigure/netty/NettyAutoConfiguration.class\\E"
   }, {
@@ -632,6 +658,18 @@
     "pattern":"\\Qorg/springframework/boot/sql/init/dependency/DatabaseInitializationDependencyConfigurer.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/boot/web/reactive/error/ErrorWebExceptionHandler.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/cache/annotation/AbstractCachingConfiguration$CachingConfigurerSupplier.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/cache/annotation/AbstractCachingConfiguration.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/cache/annotation/CachingConfigurationSelector.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/cache/annotation/CachingConfigurer.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/cache/annotation/EnableCaching.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/cache/annotation/ProxyCachingConfiguration.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/cloud/autoconfigure/ConfigurationPropertiesRebinderAutoConfiguration.class\\E"
   }, {
@@ -795,6 +833,8 @@
   }, {
     "pattern":"\\Qorg/springframework/data/r2dbc/repository/support/R2dbcRepositoryFactoryBean.class\\E"
   }, {
+    "pattern":"\\Qorg/springframework/data/redis/core/convert/ReferenceResolverImpl.class\\E"
+  }, {
     "pattern":"\\Qorg/springframework/data/repository/reactive/ReactiveCrudRepository.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/http/HttpMessage.class\\E"
@@ -854,6 +894,8 @@
     "pattern":"\\Qspringdoc.config.properties\\E"
   }, {
     "pattern":"\\Qstatic/favicon.ico\\E"
+  }, {
+    "pattern":"jdk.jfr:\\Qjdk/jfr/internal/types/metadata.bin\\E"
   }, {
     "pattern":"org.graalvm.sdk:\\Qorg/graalvm/nativeimage/hosted/Feature.class\\E"
   }]},

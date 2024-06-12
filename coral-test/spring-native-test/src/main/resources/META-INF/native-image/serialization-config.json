@@ -110,6 +110,9 @@
     },
     {
       "name":"org.springframework.boot.logging.logback.SpringProfileModel"
+    },
+    {
+      "name":"org.springframework.cache.support.NullValue"
     }
   ],
   "lambdaCapturingTypes":[
