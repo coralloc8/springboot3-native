@@ -280,14 +280,18 @@
                     <buildArgs combine.children="append">
                         <buildArg>
                             --verbose
+                            -Djavax.xml.accessExternalSchema=all
                             -Djavax.xml.accessExternalDTD=all
+                            <!-- 禁用lettuce中jfr功能 windows暂时不支持  在此处配置不生效，疑问？ -->
+<!--                            -Dio.lettuce.core.jfr=false-->
                             -Dfile.encoding=UTF-8
                             -H:+AddAllCharsets
                             -H:+ReportExceptionStackTraces
                             <!--                            -H:+PrintClassInitialization-->
                             --allow-incomplete-classpath
                             --report-unsupported-elements-at-runtime
-                            --enable-monitoring=jfr
+                            <!-- io.lettuce.core.jfr=true时enable-monitoring才能开启，io.lettuce.core.jfr默认值就是true -->
+<!--                            &#45;&#45;enable-monitoring=jfr-->
                         </buildArg>
                         <!-- 反射 -->
                         <buildArg>
