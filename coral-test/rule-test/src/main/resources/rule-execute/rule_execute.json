@@ -1,0 +1,119 @@
+[
+  {
+    "desc": "【医保结算清单】质控-循证校验",
+    "api_service": "insurance",
+    "api_key": "循证校验",
+    "url": "http://192.168.29.119:9000/api/insurance/v1/qc/verify/evidenceBased",
+    "method": "POST",
+    "content_type": "application/json",
+    "data": {
+      "hospCode": "${hosp_code}",
+      "iptSn": "${ipt_sn}",
+      "qualitySerialNum": "${uuid}",
+      "stlmSn": "${stlm_sn}"
+    }
+  },
+  {
+    "desc": "【医保结算清单】质控-基础校验",
+    "api_service": "insurance",
+    "api_key": "基础校验",
+    "url": "http://192.168.29.119:9000/api/insurance/v1/qc/verify/basic",
+    "method": "POST",
+    "content_type": "application/json",
+    "data": {
+      "hospCode": "${hosp_code}",
+      "iptSn": "${ipt_sn}",
+      "qualitySerialNum": "${uuid}",
+      "stlmSn": "${stlm_sn}"
+    }
+  },
+  {
+    "desc": "【医保结算清单】质控-编码校验",
+    "api_service": "insurance",
+    "api_key": "编码校验",
+    "url": "http://192.168.29.119:9000/api/insurance/v1/qc/verify/code",
+    "method": "POST",
+    "content_type": "application/json",
+    "data": {
+      "hospCode": "${hosp_code}",
+      "iptSn": "${ipt_sn}",
+      "qualitySerialNum": "${uuid}",
+      "stlmSn": "${stlm_sn}"
+    }
+  },
+  {
+    "desc": "规则引擎循证校验规则测试",
+    "api_service": "rule",
+    "api_key": "循证校验",
+    "url": "http://192.168.29.119:9000/api/rule/v1/execute/v2",
+    "method": "POST",
+    "content_type": "application/json",
+    "data": {
+      "appScenario": "QUALITY",
+      "dataType": "1",
+      "hospitalCode": "${hosp_code}",
+      "iptSn": "${ipt_sn}",
+      "module": "verify_evidence_based",
+      "patientId": "${patient_id}",
+      "patientName": "${patient_name}",
+      "processingLogicType": "REAL_TIME",
+      "project": "INSURANCE",
+      "qualitySerialNum": "${uuid}",
+      "ruleOrderType": "4",
+      "sn": "${stlm_sn}",
+      "tipsNodes": [
+        "循证校验"
+      ]
+    }
+  },
+  {
+    "desc": "规则引擎基础校验规则测试",
+    "api_service": "rule",
+    "api_key": "基础校验",
+    "url": "http://192.168.29.119:9000/api/rule/v1/urule/quality/basic",
+    "method": "POST",
+    "content_type": "application/json",
+    "data": {
+      "appScenario": "QUALITY",
+      "dataType": "1",
+      "hospitalCode": "${hosp_code}",
+      "iptSn": "${ipt_sn}",
+      "module": "verify_basic",
+      "patientId": "${patient_id}",
+      "patientName": "${patient_name}",
+      "processingLogicType": "REAL_TIME",
+      "project": "INSURANCE",
+      "qualitySerialNum": "${uuid}",
+      "ruleOrderType": "4",
+      "sn": "${stlm_sn}",
+      "tipsNodes": [
+        "基础校验"
+      ]
+    }
+  },
+  {
+    "desc": "规则引擎编码校验规则测试",
+    "api_service": "rule",
+    "api_key": "编码校验",
+    "url": "http://192.168.29.119:9000/api/rule/v1/urule/quality/code",
+    "method": "POST",
+    "content_type": "application/json",
+    "data": {
+      "appScenario": "QUALITY",
+      "dataType": "1",
+      "hospitalCode": "${hosp_code}",
+      "iptSn": "${ipt_sn}",
+      "module": "verify_code",
+      "patientId": "${patient_id}",
+      "patientName": "${patient_name}",
+      "processingLogicType": "REAL_TIME",
+      "project": "INSURANCE",
+      "qualitySerialNum": "${uuid}",
+      "ruleOrderType": "4",
+      "sn": "${stlm_sn}",
+      "tipsNodes": [
+        "编码校验"
+      ]
+    }
+  }
+]

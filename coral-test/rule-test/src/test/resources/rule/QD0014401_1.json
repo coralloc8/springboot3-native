@@ -1,0 +1,86 @@
+{
+  "rule_code": "QD0014401",
+  "rule_name": "检查诊断疑似漏编",
+  "desc": "检查诊断全部都是程序实时提取出来的，并且都不在【组间合并症诊断编码知识库中】",
+  "unique_key": "primary_id",
+  "select_keys": [
+    "hosp_code",
+    "stlm_sn"
+  ],
+  "required": {
+    "org_code": "H41088200229",
+    "org_name": "沁阳市人民医院",
+    "hosp_code": "QYSRMYY",
+    "patient_id": "20240513100803814716",
+    "ipt_sn": "202415027",
+    "stlm_sn": "202415027"
+  },
+  "optional": {
+    "ipt_no": "",
+    "mi_record_num": "",
+    "sn": ""
+  },
+  "settings": [
+    {
+      "table": "dwd.dwd_misl_main",
+      "unique_key": "primary_id",
+      "field_mapping": {
+        "sex_code": "2",
+        "sex_name": "女",
+        "sex_code_std": "2",
+        "sex_name_std": "女性",
+        "ipt_dept_code": "A03.04",
+        "ipt_dept_name": "心血管内科专业",
+        "ipt_dept_code_std": "0304",
+        "ipt_dept_name_std": "心血管内科专业",
+        "leave_dept_code": "A03.04",
+        "leave_dept_name": "心血管内科专业",
+        "leave_dept_code_std": "0304",
+        "leave_dept_name_std": "心血管内科专业"
+      }
+    },
+    {
+      "table": "dwd.dwd_misl_diag",
+      "unique_key": "primary_id",
+      "select_keys": [
+        "hosp_code",
+        "ipt_sn",
+        "primary_id"
+      ],
+      "field_mappings": [
+        {
+          "primary_id": "2024150271",
+          "diag_type_code_std_derive": "020102",
+          "diag_type_name_std_derive": "西医出院其他诊断",
+          "diag_code": "A01.000x017",
+          "diag_name": "伤寒轻型",
+          "diag_code_std": "$A01.000x017$",
+          "diag_name_std": "$伤寒轻型$",
+          "diag_lv1_code_std": "$A00-A09$",
+          "diag_lv1_name_std": "$肠道传染病肠道传染病$",
+          "diag_lv2_code_std": "$A01$",
+          "diag_lv2_name_std": "$伤寒和副伤寒$",
+          "diag_lv3_code_std": "$A01.0$",
+          "diag_lv3_name_std": "$伤寒$"
+        },
+        {
+          "diag_type_code_std_derive": "020101",
+          "diag_type_name_std_derive": "西医出院主要诊断",
+          "diag_code": "A02.900",
+          "diag_name": "沙门菌感染",
+          "diag_code_std": "$A02.900$",
+          "diag_name_std": "$沙门菌感染$",
+          "diag_lv1_code_std": "$A00-A09$",
+          "diag_lv1_name_std": "$肠道传染病$",
+          "diag_lv2_code_std": "$A02$",
+          "diag_lv2_name_std": "$其他沙门菌感染$",
+          "diag_lv3_code_std": "$A02.9$",
+          "diag_lv3_name_std": "$未特指的沙门菌感染$"
+        }
+      ]
+    }
+  ]
+}
+
+
+

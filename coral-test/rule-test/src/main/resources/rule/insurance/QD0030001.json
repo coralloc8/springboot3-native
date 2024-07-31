@@ -1,0 +1,29 @@
+{
+  "rule_code": "QD0030001",
+  "rule_name": "会诊记录提示疾病",
+  "desc": "会诊记录提示疾病，使用真实患者测试",
+  "unique_key": "primary_id",
+  "select_keys": [
+    "hosp_code",
+    "stlm_sn"
+  ],
+  "required": {
+    "org_code": "H52262300006",
+    "org_name": "施秉县人民医院",
+    "hosp_code": "SBXRMYY",
+    "patient_id": "522623202101262816",
+    "ipt_sn": "2023013302",
+    "stlm_sn": "2023013302stlm_sn"
+  },
+  "optional": {
+    "ipt_no": "",
+    "mi_record_num": "",
+    "sn": "2023013302sn"
+  },
+  "settings": [
+
+  ]
+}
+
+
+

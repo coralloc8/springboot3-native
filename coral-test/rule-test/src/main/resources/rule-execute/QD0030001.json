@@ -1,0 +1,38 @@
+{
+  "rule_code": "QD0030001",
+  "rule_name": "会诊记录提示疾病",
+  "desc": "会诊记录提示疾病，使用真实患者测试",
+  "unique_key": "primary_id",
+  "select_keys": [
+    "hosp_code",
+    "stlm_sn"
+  ],
+  "required": {
+    "org_code": "H41088200229",
+    "org_name": "庆阳市人民医院",
+    "hosp_code": "QYSRMYY",
+    "patient_id": "202416818",
+    "ipt_sn": "202416818",
+    "patient_name": "QD0030001测试",
+    "stlm_sn": "202416818stlm_sn"
+  },
+  "optional": {
+    "ipt_no": "",
+    "mi_record_num": "",
+    "sn": "2023013302sn"
+  },
+  "settings": [
+    {
+      "table": "dwd.dwd_misl_main",
+      "unique_key": "primary_id",
+      "field_mapping": {
+        "patient_name": "QD0030001测试",
+        "sex_code": "2",
+        "sex_name": "女"
+      }
+    }
+  ]
+}
+
+
+

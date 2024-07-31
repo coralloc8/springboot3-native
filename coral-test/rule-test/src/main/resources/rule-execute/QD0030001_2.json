@@ -1,0 +1,110 @@
+{
+  "rule_code": "QD0030001",
+  "rule_name": "会诊记录提示疾病",
+  "desc": "会诊记录提示疾病，模拟患者测试",
+  "unique_key": "primary_id",
+  "select_keys": [
+    "hosp_code",
+    "stlm_sn"
+  ],
+  "required": {
+    "org_code": "H41088200229",
+    "org_name": "庆阳市人民医院",
+    "hosp_code": "QYSRMYY",
+    "patient_id": "MOCK_522623202101262816",
+    "ipt_sn": "MOCK_2023013302",
+    "patient_name": "QD0030001测试001",
+    "stlm_sn": "MOCK_2023013302stlm_sn"
+  },
+  "optional": {
+    "ipt_no": "MOCK_2023013302",
+    "mi_record_num": "",
+    "sn": "MOCK_2023013302sn"
+  },
+  "settings": [
+    {
+      "table": "dwd.dwd_misl_main",
+      "unique_key": "primary_id",
+      "field_mapping": {
+        "patient_name": "QD0030001测试001",
+        "sex_code": "2",
+        "sex_name": "女",
+        "sex_code_std": "2",
+        "sex_name_std": "女性",
+        "ipt_dept_code": "A03.04",
+        "ipt_dept_name": "心血管内科专业",
+        "ipt_dept_code_std": "0304",
+        "ipt_dept_name_std": "心血管内科专业",
+        "leave_dept_code": "A03.04",
+        "leave_dept_name": "心血管内科专业",
+        "leave_dept_code_std": "0304",
+        "leave_dept_name_std": "心血管内科专业",
+        "age_year": "69岁",
+        "age_year_clean": 69.00000
+      }
+    },
+    {
+      "table": "dwd.dwd_misl_diag",
+      "unique_key": "primary_id",
+      "select_keys": [
+        "hosp_code",
+        "ipt_sn",
+        "primary_id"
+      ],
+      "pre_sqls": [
+        "delete from ${table} where hosp_code=${hosp_code} and ipt_sn=${ipt_sn};"
+      ],
+      "post_sqls": [],
+      "field_mappings": [
+        {
+          "diag_type_code_std_derive": "020101",
+          "diag_type_name_std_derive": "西医出院主要诊断",
+          "diag_code": "J18.000",
+          "diag_name": "支气管肺炎",
+          "diag_code_std": "$J18.000$",
+          "diag_name_std": "$支气管肺炎$",
+          "diag_lv1_code_std": "$J09-J18$",
+          "diag_lv1_name_std": "$流行性感冒和肺炎$",
+          "diag_lv2_code_std": "$J18$",
+          "diag_lv2_name_std": "$肺炎，病原体未特指$",
+          "diag_lv3_code_std": "$J18.0$",
+          "diag_lv3_name_std": "$未特指的支气管肺炎$"
+        }
+      ]
+    },
+    {
+      "table": "dwd.dwd_emr_consult_doctor",
+      "unique_key": "primary_id",
+      "select_keys": [
+        "hosp_code",
+        "ipt_sn",
+        "primary_id"
+      ],
+      "pre_sqls": [
+        "delete from ${table} where hosp_code=${hosp_code} and ipt_sn=${ipt_sn};"
+      ],
+      "post_sqls": [],
+      "field_mappings": [
+        {
+          "diag_result": "疑似急性甲型病毒性肝炎；昏迷；残胃出血？；疑似残胃恶性肿瘤;甲醛水溶液中毒;急性上消化道出血;肺炎。1、I型呼吸衰竭 2、意识不清查因：重症肺炎 AECOPD 感染性休克？ 急性冠脉综合征 心源性休克？急性肺栓塞？",
+          "std_type_code": "",
+          "std_type_name": "",
+          "diag_result_term": "",
+          "diag_result_code_std": "",
+          "diag_result_name_std": "",
+          "diag_result_code_mapping_type": "",
+          "diag_result_code_logic_rels": "",
+          "diag_result_section_code": "",
+          "diag_result_section_name": "",
+          "diag_result_suborder_code": "",
+          "diag_result_suborder_name": "",
+          "diag_result_category_code": "",
+          "diag_result_category_name": ""
+        }
+      ]
+    }
+  ]
+}
+
+
+

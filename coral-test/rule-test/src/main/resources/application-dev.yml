@@ -1,0 +1,72 @@
+server:
+  port: 18090
+
+#数据库配置
+db:
+  host: ${coral.datasource.url:192.168.29.66:3306}
+  name: ${coral.datasource.name:testdb}
+  username: ${coral.datasource.username:zhyx}
+  password: ${coral.datasource.password:zhyx}
+
+
+
+spring:
+  r2dbc:
+    username: ${db.username}
+    password: ${db.password}
+    url: r2dbc:postgresql://${db.host}/${db.name}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false&allowMultiQueries=true
+    name: ${db.name}
+    pool:
+      initial-size: 50
+      max-size: 100
+      enabled: true
+  cache:
+    type: redis
+    redis:
+      time-to-live: 10m
+
+  data:
+    redis:
+      #      cluster:
+      #        nodes: 192.168.29.66:6379
+      #        max-redirects: 5
+      host: 192.168.29.66
+      port: 6379
+      password: zhyx_redis
+      database: 10
+      timeout: 5000
+      lettuce:
+        pool:
+          min-idle: 10
+          max-idle: 50
+          max-active: 200
+          max-wait: 5000ms
+          enabled: true
+
+# doc文档
+springdoc:
+  # 是否启用doc 生产环境在外网的话可以选择关闭该功能
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    #自定义swagger前端请求路径，输入http：127.0.0.1:8080/doc 会自动重定向到swagger页面
+    # path: /doc
+    # 不显示默认示例
+    disable-swagger-default-url: true
+
+coral:
+  rule:
+    execute-timout: 1800
+    # 规则配置路径 相对路径
+    rule-config-path: ./config/rule-config
+    # 规则路径（不会执行，只是放着。真正执行的时候可以将规则复制到执行路径） 相对路径
+    rule-path: ./config/rule
+    # 规则报告路径  相对路径
+    rule-report-path: ./config/rule-report
+    # 规则报告模板路径
+    report-template-path: ./config/templates
+    # 规则执行路径
+    rule-execute-path: ./config/rule-execute
+    # 规则执行配置文件名称
+    execute-config-name: rule_execute.json

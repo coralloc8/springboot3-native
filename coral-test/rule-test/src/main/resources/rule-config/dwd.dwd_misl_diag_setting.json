@@ -1,0 +1,70 @@
+[
+  {
+    "field_value": "020101",
+    "field": "diag_type_code_std_derive",
+    "name": "西医出院主要诊断",
+    "field_mapping": {
+      "diag_type_code": "1",
+      "diag_type_name": "出院诊断",
+      "diag_type_code_std": "0201",
+      "diag_type_name_std": "西医出院诊断",
+      "main_diag_flag_code": "1",
+      "main_diag_flag_name": "是",
+      "diag_sort_code": "1",
+      "diag_sort_name": "西医",
+      "diag_type_code_std_derive": "020102",
+      "diag_type_name_std_derive": "西医出院主要诊断"
+    }
+  },
+  {
+    "field_value": "020102",
+    "field": "diag_type_code_std_derive",
+    "name": "西医出院其他诊断",
+    "field_mapping": {
+      "diag_type_code": "1",
+      "diag_type_name": "出院诊断",
+      "diag_type_code_std": "0201",
+      "diag_type_name_std": "西医出院诊断",
+      "main_diag_flag_code": "2",
+      "main_diag_flag_name": "否",
+      "diag_sort_code": "1",
+      "diag_sort_name": "西医",
+      "diag_type_code_std_derive": "020102",
+      "diag_type_name_std_derive": "西医出院其他诊断"
+    }
+  },
+  {
+    "field_value": "0101",
+    "field": "diag_type_code_std_derive",
+    "name": "西医门（急）诊诊断",
+    "field_mapping": {
+      "diag_type_code": "0101",
+      "diag_type_name": "西医门（急）诊诊断",
+      "diag_type_code_std": "0101",
+      "diag_type_name_std": "西医门（急）诊诊断",
+      "main_diag_flag_code": "2",
+      "main_diag_flag_name": "否",
+      "diag_sort_code": "1",
+      "diag_sort_name": "西医",
+      "diag_type_code_std_derive": "0101",
+      "diag_type_name_std_derive": "西医门（急）诊诊断"
+    }
+  },
+  {
+    "field_value": "09",
+    "field": "diag_type_code_std_derive",
+    "name": "病理诊断",
+    "field_mapping": {
+      "diag_type_code": "09",
+      "diag_type_name": "病理诊断",
+      "diag_type_code_std": "09",
+      "diag_type_name_std": "病理诊断",
+      "main_diag_flag_code": "2",
+      "main_diag_flag_name": "否",
+      "diag_sort_code": "1",
+      "diag_sort_name": "西医",
+      "diag_type_code_std_derive": "09",
+      "diag_type_name_std_derive": "病理诊断"
+    }
+  }
+]
