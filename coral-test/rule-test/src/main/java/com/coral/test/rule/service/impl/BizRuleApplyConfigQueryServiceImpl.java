@@ -44,7 +44,7 @@ public class BizRuleApplyConfigQueryServiceImpl implements BizRuleApplyConfigQue
         log.info(">>>>> 【业务规则应用配置查询】 【实际查询数据库】");
         // 加入缓存
         return template.getDatabaseClient().sql(ENABLED_RULE_SQL).fetch().all()
-                .log("findEnabledRules")
+//                .log("findEnabledRules")
                 .filter(map -> Objects.nonNull(map.get("tips_node")) &&
                                Objects.nonNull(map.get("project")) &&
                                Objects.nonNull(map.get("rule_code"))
