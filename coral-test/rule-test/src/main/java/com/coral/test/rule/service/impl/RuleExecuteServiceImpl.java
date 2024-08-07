@@ -183,12 +183,15 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                                         log.error("【规则执行】.执行异常.fileName:[{}].ruleCode:[{}].【流程终止】", ruleConfig.getFileName(), ruleConfig.getRuleCode(), err);
                                         return;
                                     }
+
+                                    // todo 规则解析部分后续可以独立出来
                                     Optional<RuleExecuteResponseInfoDTO> responseOpt = RuleExecuteResponseInfoDTO.parse(res, ruleConfig, ruleExecute.getApiKey());
                                     if (responseOpt.isEmpty()) {
                                         log.info("【规则执行】.返回值为空.fileName:[{}].ruleCode:[{}].【流程终止】", ruleConfig.getFileName(), ruleConfig.getRuleCode());
                                         return;
                                     }
                                     RuleExecuteResponseInfoDTO responseInfo = responseOpt.get();
+                                    // todo 文件写入后续可以独立出来
                                     writeFile(responseInfo, ruleConfig.getFileName(), ruleExecute.getApiService(), template);
                                 });
                             });
@@ -198,6 +201,7 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                         counter::incrementAndGet // 完成时的回调
                 );
     }
+
 
     /**
      * 数据准备
