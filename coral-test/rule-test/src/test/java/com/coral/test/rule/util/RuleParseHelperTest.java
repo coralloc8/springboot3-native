@@ -41,6 +41,13 @@ public class RuleParseHelperTest {
     private final static String QD0014401_1 = "QD0014401_1.json";
 
     @Test
+    @DisplayName("路径标准化")
+    public void normalize() {
+        log.info(FileUtil.normalize("./config"));
+    }
+
+
+    @Test
     @DisplayName("返回数据为空时打印日志")
     public void logWhenEmpty() {
         Mono.empty()

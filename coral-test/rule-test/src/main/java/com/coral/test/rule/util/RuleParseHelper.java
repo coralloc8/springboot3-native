@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -44,6 +45,7 @@ public class RuleParseHelper {
         return HELPER;
     }
 
+
     /**
      * 创建规则报表（html）
      *
@@ -65,25 +67,28 @@ public class RuleParseHelper {
      * @return
      */
     public List<String> findFiles(String basePath, Set<String> ruleCodes) {
-        List<String> fileNames;
+        List<String> fileNames = new ArrayList<>();
         try {
             fileNames = FileUtil.listFileNames(basePath);
         } catch (Exception e) {
-            String absolutePathOfUserDir = getAbsolutePathOfUserDir(basePath);
-            log.error(">>>>> [findFiles] 查询文件失败,尝试以工作目录为起点重新查找，拼接的新目录为[{}]. ERROR.", absolutePathOfUserDir, e);
+            String absolutePathOfUserDir = getAbsolutePathByUserDir(basePath);
+            log.error(">>>>> [findFiles] 查询文件失败,尝试以工作目录为起点重新查找，拼接的新目录为[{}].", absolutePathOfUserDir);
             try {
                 fileNames = FileUtil.listFileNames(absolutePathOfUserDir);
             } catch (Exception e2) {
                 log.error(">>>>> [findFiles] 以工作目录为起点查询文件失败", e2);
-                fileNames = Collections.emptyList();
             }
         }
-        if (CollUtil.isNotEmpty(ruleCodes)) {
-            return fileNames.stream()
-                    .filter(name -> ruleCodes.stream().anyMatch(name::startsWith))
-                    .collect(Collectors.toList());
+        if (CollUtil.isEmpty(fileNames)) {
+            return Collections.emptyList();
         }
-        return fileNames;
+        Predicate<String> filter = t -> true;
+        if (CollUtil.isNotEmpty(ruleCodes)) {
+            filter = name -> ruleCodes.stream().anyMatch(name::startsWith);
+        }
+        return fileNames.stream().distinct()
+                .filter(filter)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -102,9 +107,9 @@ public class RuleParseHelper {
         try {
             return String.join("\n", FileUtil.readLines(filePath, StandardCharsets.UTF_8));
         } catch (Exception e) {
-            String absolutePathOfUserDir = getAbsolutePathOfUserDir(basePath);
+            String absolutePathOfUserDir = getAbsolutePathByUserDir(basePath);
             filePath = String.join("/", absolutePathOfUserDir, fileName);
-            log.error(">>>>> [readFileContent] 读取文件内容失败.尝试以工作目录为起点重新查找，拼接的新目录为[{}]. ERROR", filePath, e);
+            log.error(">>>>> [readFileContent] 读取文件内容失败.尝试以工作目录为起点重新查找，拼接的新目录为[{}]", filePath);
             try {
                 return String.join("\n", FileUtil.readLines(filePath, StandardCharsets.UTF_8));
             } catch (Exception e2) {
@@ -557,21 +562,26 @@ public class RuleParseHelper {
         return str.substring(2, str.length() - 1);
     }
 
-
     /**
      * 获取工作目录下的绝对路径
      *
      * @param basePath
      * @return
      */
-    private String getAbsolutePathOfUserDir(String basePath) {
+    public String getAbsolutePathByUserDir(String basePath) {
         if (StringUtils.isBlank(basePath)) {
             return "";
         }
-        if (basePath.startsWith(".")) {
-            basePath = basePath.substring(1);
+        String normalPath = FileUtil.normalize(basePath);
+        if (FileUtil.isAbsolutePath(normalPath)) {
+            // 给定的路径已经是绝对路径了
+            return normalPath;
         }
-        return Path.of(getUserDirPath(), basePath).toString();
+
+        if (normalPath.startsWith(".")) {
+            normalPath = normalPath.substring(1);
+        }
+        return Path.of(getUserDirPath(), normalPath).toString();
     }
 
     /**

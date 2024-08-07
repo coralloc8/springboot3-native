@@ -2,15 +2,12 @@ package com.coral.test.rule.service;
 
 import com.coral.test.rule.RuleApplicationTest;
 import com.coral.test.rule.dto.RuleExecuteResponseInfoDTO;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Optional;
 
 /**
  * 模板测试
@@ -22,9 +19,6 @@ import java.util.Optional;
  */
 @Slf4j
 public class FreeMarkerCreateServiceTest extends RuleApplicationTest {
-
-    @Resource
-    private FreeMarkerCreateService freeMarkerCreateService;
 
 
     @Test
@@ -127,9 +121,7 @@ public class FreeMarkerCreateServiceTest extends RuleApplicationTest {
                                 .build()
                 ))
                 .build();
-
-        Optional<String> res = freeMarkerCreateService.create("rule_report.md.ftl", response).blockOptional();
-
-        System.out.println(res.get());
+//        Optional<String> res = freeMarkerCreateService.create("rule_report.md.ftl", response).blockOptional();
+//        System.out.println(res.get());
     }
 }

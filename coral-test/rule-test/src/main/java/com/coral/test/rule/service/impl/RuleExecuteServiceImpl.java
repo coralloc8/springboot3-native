@@ -109,7 +109,7 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
             Map<String, AtomicLong> allCounter = ruleConfigGroupMap.keySet().stream()
                     .collect(Collectors.toMap(k -> k, v -> new AtomicLong(0)));
 
-            final Template template = finalTemplateOptional.isEmpty() ? null : finalTemplateOptional.get();
+            final Template template = finalTemplateOptional.orElse(null);
             ruleConfigGroupMap.entrySet().parallelStream().forEach(entry -> {
                 List<RuleConfigInfoDTO> configs = entry.getValue();
                 // 相同数据的情况下只能串行执行
@@ -261,13 +261,15 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
      * @param template
      */
     private void writeFile(RuleExecuteResponseInfoDTO responseInfo, String fileName, String apiService, Template template) {
-        final String basePath = RuleProperty.RULE_REPORT_PATH;
+        String basePath = RuleParseHelper.getInstance().getAbsolutePathByUserDir(RuleProperty.RULE_REPORT_PATH);
+
         String fileNameWithoutType = fileName.substring(0, fileName.lastIndexOf("."));
         String newFileName = String.join("_", fileNameWithoutType, apiService);
 
         final String markdownFileName = Path.of(basePath, "markdown", newFileName + ".md").toString();
         final String htmlFileName = Path.of(basePath, "html", newFileName + ".html").toString();
-
+        log.info("【文件写入】. markdown 文件全路径: [{}]", markdownFileName);
+        log.info("【文件写入】. html 文件全路径: [{}]", htmlFileName);
         try {
             String markdown = FreeMarkerUtils.createDefRuleReport(template, responseInfo);
             if (StringUtils.isBlank(markdown)) {
@@ -275,9 +277,11 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                 return;
             }
             FileUtil.writeString(markdown, markdownFileName, StandardCharsets.UTF_8);
+            log.debug("【文件写入】.markdown文件内容为：\n {}", markdown);
             log.info("【文件写入】.创建markdown文件成功.规则:[{}].", responseInfo.getRuleCode());
             String html = MarkdownUtils.markdownToHtml(markdown);
             FileUtil.writeString(html, htmlFileName, StandardCharsets.UTF_8);
+            log.debug("【文件写入】.html文件内容为：\n {}", html);
             log.info("【文件写入】.创建html文件成功.规则:[{}].", responseInfo.getRuleCode());
         } catch (Exception e) {
             log.error("【文件写入】异常.规则:[{}].", responseInfo.getRuleCode(), e);
