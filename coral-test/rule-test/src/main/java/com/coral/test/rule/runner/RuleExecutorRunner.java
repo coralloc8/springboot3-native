@@ -25,7 +25,8 @@ public class RuleExecutorRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("##### 同步自动运行规则 开始 #####");
-        ruleExecuteService.execute().blockOptional();
+        ruleExecuteService.execute().subscribe();
         log.info("##### 同步自动运行规则 结束 #####");
     }
+
 }

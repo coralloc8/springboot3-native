@@ -9,16 +9,18 @@ import com.coral.test.rule.dto.RuleExecuteInfoDTO;
 import com.coral.test.rule.dto.RuleExecuteResponseInfoDTO;
 import com.coral.test.rule.dto.SqlInfoDTO;
 import com.coral.test.rule.service.BizRuleApplyConfigQueryService;
-import com.coral.test.rule.service.FreeMarkerCreateService;
 import com.coral.test.rule.service.RuleExecuteService;
+import com.coral.test.rule.util.FreeMarkerUtils;
 import com.coral.test.rule.util.MarkdownUtils;
 import com.coral.test.rule.util.RuleParseHelper;
+import freemarker.template.Template;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.result.view.freemarker.FreeMarkerConfigurer;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
@@ -50,19 +52,22 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
 
     private final BizRuleApplyConfigQueryService bizRuleApplyConfigQueryService;
 
-    private final FreeMarkerCreateService freeMarkerCreateService;
-
     @Qualifier("taskExecutor")
     private final Executor taskExecutor;
 
 
-    // 默认模板名称
-    private static final String RULE_REPORT_TEMPLATE_NAME = "rule_report.md.ftl";
-
-
     @Override
     public Mono<Void> execute() {
+        Optional<Template> templateOptional = Optional.empty();
+        try {
+            // todo 打包成jar的情况下 目前在 流内部获取模板失败 需排查
+            templateOptional = FreeMarkerUtils.getDefRuleReport();
+        } catch (Exception e) {
+            log.error(">>>>> 获取 规则报告模板失败:", e);
+        }
+        Optional<Template> finalTemplateOptional = templateOptional;
         return Mono.fromFuture(CompletableFuture.runAsync(() -> {
+
             log.info("\n######################################## 【规则执行】.【执行开始】 ########################################\n");
             String basePath = RuleProperty.RULE_EXECUTE_PATH;
             List<String> fileNames = RuleParseHelper.getInstance().findFiles(basePath, null);
@@ -104,6 +109,7 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
             Map<String, AtomicLong> allCounter = ruleConfigGroupMap.keySet().stream()
                     .collect(Collectors.toMap(k -> k, v -> new AtomicLong(0)));
 
+            final Template template = finalTemplateOptional.isEmpty() ? null : finalTemplateOptional.get();
             ruleConfigGroupMap.entrySet().parallelStream().forEach(entry -> {
                 List<RuleConfigInfoDTO> configs = entry.getValue();
                 // 相同数据的情况下只能串行执行
@@ -112,7 +118,8 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                     // 数据准备
                     dataPreparation(config);
                     // 规则执行
-                    executeOneRule(config, ruleExecutes, counter);
+
+                    executeOneRule(config, ruleExecutes, counter, template);
                 });
             });
             waitAllCompleted(totalMap, allCounter);
@@ -155,16 +162,10 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
         });
     }
 
-    private void executeOneRule(RuleConfigInfoDTO ruleConfig, List<RuleExecuteInfoDTO> ruleExecutes, AtomicLong counter) {
+    private void executeOneRule(RuleConfigInfoDTO ruleConfig, List<RuleExecuteInfoDTO> ruleExecutes, AtomicLong counter, Template template) {
         bizRuleApplyConfigQueryService.findEnabledRules()
-                .log("executeOneRule")
-                .filter(bizRule -> {
-                    boolean match = bizRule.getRuleCodes().contains(ruleConfig.getRuleCode());
-//                    if (!match) {
-//                        log.warn("【规则执行】.规则未启用.fileName:[{}].ruleCode:[{}].【流程终止】", ruleConfig.getFileName(), ruleConfig.getRuleCode());
-//                    }
-                    return match;
-                })
+//                .log("executeOneRule")
+                .filter(bizRule -> bizRule.getRuleCodes().contains(ruleConfig.getRuleCode()))
                 .map(bizRule -> ruleExecutes.stream()
                         .filter(ruleExecute -> bizRule.getTipsNode().equals(ruleExecute.getApiKey()))
                         .collect(Collectors.toList())
@@ -188,7 +189,7 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                                         return;
                                     }
                                     RuleExecuteResponseInfoDTO responseInfo = responseOpt.get();
-                                    writeFile(responseInfo, ruleConfig.getFileName(), ruleExecute.getApiService());
+                                    writeFile(responseInfo, ruleConfig.getFileName(), ruleExecute.getApiService(), template);
                                 });
                             });
                             //
@@ -257,30 +258,32 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
      * @param responseInfo
      * @param fileName
      * @param apiService
+     * @param template
      */
-    private void writeFile(RuleExecuteResponseInfoDTO responseInfo, String fileName, String apiService) {
+    private void writeFile(RuleExecuteResponseInfoDTO responseInfo, String fileName, String apiService, Template template) {
         final String basePath = RuleProperty.RULE_REPORT_PATH;
         String fileNameWithoutType = fileName.substring(0, fileName.lastIndexOf("."));
         String newFileName = String.join("_", fileNameWithoutType, apiService);
 
         final String markdownFileName = Path.of(basePath, "markdown", newFileName + ".md").toString();
         final String htmlFileName = Path.of(basePath, "html", newFileName + ".html").toString();
-        freeMarkerCreateService.create(RULE_REPORT_TEMPLATE_NAME, responseInfo).doOnSuccess(markdown -> {
-            try {
-                if (StringUtils.isBlank(markdown)) {
-                    log.info("【文件写入】.创建markdown文件失败.规则:[{}].", responseInfo.getRuleCode());
-                    return;
-                }
-                FileUtil.writeString(markdown, markdownFileName, StandardCharsets.UTF_8);
-                log.info("【文件写入】.创建markdown文件成功.规则:[{}].", responseInfo.getRuleCode());
-                String html = MarkdownUtils.markdownToHtml(markdown);
-                FileUtil.writeString(html, htmlFileName, StandardCharsets.UTF_8);
-                log.info("【文件写入】.创建html文件成功.规则:[{}].", responseInfo.getRuleCode());
-            } catch (Exception e) {
-                log.error("【文件写入】异常.规则:[{}].", responseInfo.getRuleCode(), e);
-            }
-        }).subscribe();
 
+        try {
+            String markdown = FreeMarkerUtils.createDefRuleReport(template, responseInfo);
+            if (StringUtils.isBlank(markdown)) {
+                log.info("【文件写入】.创建markdown文件失败.规则:[{}].", responseInfo.getRuleCode());
+                return;
+            }
+            FileUtil.writeString(markdown, markdownFileName, StandardCharsets.UTF_8);
+            log.info("【文件写入】.创建markdown文件成功.规则:[{}].", responseInfo.getRuleCode());
+            String html = MarkdownUtils.markdownToHtml(markdown);
+            FileUtil.writeString(html, htmlFileName, StandardCharsets.UTF_8);
+            log.info("【文件写入】.创建html文件成功.规则:[{}].", responseInfo.getRuleCode());
+        } catch (Exception e) {
+            log.error("【文件写入】异常.规则:[{}].", responseInfo.getRuleCode(), e);
+        }
     }
+
+    private final FreeMarkerConfigurer freeMarkerConfigurer;
 
 }

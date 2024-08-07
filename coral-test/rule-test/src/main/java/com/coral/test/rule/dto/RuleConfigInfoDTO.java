@@ -67,7 +67,6 @@ public class RuleConfigInfoDTO {
     @Schema(description = "规则测试字段映射")
     private List<Setting> settings;
 
-
     /**
      * 获取数据唯一标识
      *

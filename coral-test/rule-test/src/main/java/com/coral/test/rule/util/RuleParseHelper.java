@@ -17,6 +17,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -64,7 +65,19 @@ public class RuleParseHelper {
      * @return
      */
     public List<String> findFiles(String basePath, Set<String> ruleCodes) {
-        List<String> fileNames = FileUtil.listFileNames(basePath);
+        List<String> fileNames;
+        try {
+            fileNames = FileUtil.listFileNames(basePath);
+        } catch (Exception e) {
+            String absolutePathOfUserDir = getAbsolutePathOfUserDir(basePath);
+            log.error(">>>>> [findFiles] 查询文件失败,尝试以工作目录为起点重新查找，拼接的新目录为[{}]. ERROR.", absolutePathOfUserDir, e);
+            try {
+                fileNames = FileUtil.listFileNames(absolutePathOfUserDir);
+            } catch (Exception e2) {
+                log.error(">>>>> [findFiles] 以工作目录为起点查询文件失败", e2);
+                fileNames = Collections.emptyList();
+            }
+        }
         if (CollUtil.isNotEmpty(ruleCodes)) {
             return fileNames.stream()
                     .filter(name -> ruleCodes.stream().anyMatch(name::startsWith))
@@ -82,16 +95,23 @@ public class RuleParseHelper {
      */
     public String readFileContent(String basePath, String fileName) {
         if (StringUtils.isBlank(fileName)) {
-            log.info(">>>>> [readJsonFromFile] fileName为空.未能读取到文件内容.");
+            log.info(">>>>> [readFileContent] fileName为空.未能读取到文件内容.");
             return "";
         }
         String filePath = String.join("/", basePath, fileName);
         try {
-            return FileUtil.readLines(filePath, StandardCharsets.UTF_8).stream().collect(Collectors.joining("\n"));
+            return String.join("\n", FileUtil.readLines(filePath, StandardCharsets.UTF_8));
         } catch (Exception e) {
-            log.error("读取读取文件内容失败", e);
+            String absolutePathOfUserDir = getAbsolutePathOfUserDir(basePath);
+            filePath = String.join("/", absolutePathOfUserDir, fileName);
+            log.error(">>>>> [readFileContent] 读取文件内容失败.尝试以工作目录为起点重新查找，拼接的新目录为[{}]. ERROR", filePath, e);
+            try {
+                return String.join("\n", FileUtil.readLines(filePath, StandardCharsets.UTF_8));
+            } catch (Exception e2) {
+                log.error(">>>>> [readFileContent] 以工作目录为起点读取文件内容失败", e2);
+                return "";
+            }
         }
-        return "";
     }
 
     /**
@@ -103,9 +123,16 @@ public class RuleParseHelper {
     public List<SqlInfoDTO> buildSql(RuleConfigInfoDTO ruleConfigReq) {
         List<RuleConfigInfoDTO.Setting> settings = ruleConfigReq.getSettings();
         if (CollUtil.isEmpty(settings)) {
-            log.info(">>>>> 规则测试字段映射配置为空。构建SQL语句失败");
+            log.info(">>>>>【规则配置解析】. 规则测试字段映射配置为空。构建SQL语句失败");
             return Collections.emptyList();
         }
+
+        List<String> fileNames = RuleParseHelper.getInstance().findFiles(RuleProperty.RULE_CONFIG_PATH, null);
+        if (CollUtil.isEmpty(fileNames)) {
+            log.info("【规则配置解析】.查询到需要解析的规则文件列表为空.【流程终止】");
+            return Collections.emptyList();
+        }
+        log.info("【规则配置解析】.查询到需要解析的规则文件列表为：{}", fileNames);
 
         List<SqlInfoDTO> sqlInfoDTOS = new ArrayList<>();
 
@@ -122,20 +149,31 @@ public class RuleParseHelper {
                 setting.setFieldMappings(Collections.singletonList(setting.getFieldMapping()));
             }
             if (CollUtil.isEmpty(setting.getFieldMappings())) {
-                log.warn(">>>>> [buildSql] table:[{}]没有字段映射配置,忽略进入下一轮循环.", setting.getTable());
+                log.warn(">>>>>【规则配置解析】. [buildSql] table:[{}]没有字段映射配置,忽略进入下一轮循环.", setting.getTable());
                 continue;
             }
-            String tableJson = readFileContent(RuleProperty.RULE_CONFIG_PATH, StrFormatter.format(TABLE_JSON, setting.getTable()));
+
+            String tableJsonName = StrFormatter.format(TABLE_JSON, setting.getTable());
+            if (!fileNames.contains(tableJsonName)) {
+                continue;
+            }
+            String tableJson = readFileContent(RuleProperty.RULE_CONFIG_PATH, tableJsonName);
             if (StringUtils.isBlank(tableJson)) {
-                log.warn(">>>>> [buildSql] table:[{}]没有表对应配置,忽略进入下一轮循环.", setting.getTable());
+                log.warn(">>>>>【规则配置解析】. [buildSql] table:[{}]没有表对应配置,忽略进入下一轮循环.", setting.getTable());
                 continue;
             }
             Map tableMap = JsonUtil.parseArray(tableJson, Map.class).get(0);
-            String tableSettingJson = readFileContent(RuleProperty.RULE_CONFIG_PATH, StrFormatter.format(TABLE_SETTING_JSON, setting.getTable()));
+
+            // table setting
+            String tableSettingJsonName = StrFormatter.format(TABLE_SETTING_JSON, setting.getTable());
             List<RuleConfigInfoDTO.Setting> tableSettings = new ArrayList<>();
-            if (StringUtils.isNotBlank(tableSettingJson)) {
-                tableSettings = JsonUtil.parseArray(tableSettingJson, RuleConfigInfoDTO.Setting.class);
+            if (fileNames.contains(tableSettingJsonName)) {
+                String tableSettingJson = readFileContent(RuleProperty.RULE_CONFIG_PATH, tableSettingJsonName);
+                if (StringUtils.isNotBlank(tableSettingJson)) {
+                    tableSettings = JsonUtil.parseArray(tableSettingJson, RuleConfigInfoDTO.Setting.class);
+                }
             }
+
             List<SqlInfoDTO.TableSqlInfoDTO> tableSqlInfos = new ArrayList<>();
 
             for (Map<String, Object> fieldMapping : setting.getFieldMappings()) {
@@ -382,8 +420,8 @@ public class RuleParseHelper {
             tableSettings.stream().filter(tabSetting -> {
                 String settingFieldValue = (String) fieldMapping.getOrDefault(tabSetting.getField(), "");
                 return tabSetting.getField().equals(k) &&
-                       settingFieldValue.equals(tabSetting.getFieldValue()) &&
-                       Objects.nonNull(tabSetting.getFieldMapping());
+                        settingFieldValue.equals(tabSetting.getFieldValue()) &&
+                        Objects.nonNull(tabSetting.getFieldMapping());
             }).map(RuleConfigInfoDTO.Setting::getFieldMapping).forEach(map -> {
                 map.forEach((sk, sv) -> {
                     String curVal = formatSqlValue(String.valueOf(sv), sv);
@@ -460,8 +498,8 @@ public class RuleParseHelper {
                     fieldValue = (String) optional.getOrDefault(setting.getField(), "");
                 }
                 return Objects.nonNull(setting.getFieldMapping()) &&
-                       StringUtils.isNotBlank(fieldValue) &&
-                       fieldValue.equals(setting.getFieldValue());
+                        StringUtils.isNotBlank(fieldValue) &&
+                        fieldValue.equals(setting.getFieldValue());
             }).map(setting -> setting.getFieldMapping().get(fieldKey)).filter(Objects::nonNull).findFirst().orElse(null);
         }
         // table的值优先度最低
@@ -503,9 +541,9 @@ public class RuleParseHelper {
      */
     private boolean isVariable(Object key) {
         return Objects.nonNull(key) &&
-               key instanceof String &&
-               key.toString().startsWith("${") &&
-               key.toString().endsWith("}");
+                key instanceof String &&
+                key.toString().startsWith("${") &&
+                key.toString().endsWith("}");
     }
 
     /**
@@ -517,5 +555,31 @@ public class RuleParseHelper {
     private String parseVariableName(Object key) {
         String str = key.toString();
         return str.substring(2, str.length() - 1);
+    }
+
+
+    /**
+     * 获取工作目录下的绝对路径
+     *
+     * @param basePath
+     * @return
+     */
+    private String getAbsolutePathOfUserDir(String basePath) {
+        if (StringUtils.isBlank(basePath)) {
+            return "";
+        }
+        if (basePath.startsWith(".")) {
+            basePath = basePath.substring(1);
+        }
+        return Path.of(getUserDirPath(), basePath).toString();
+    }
+
+    /**
+     * 获取用户工作目录
+     *
+     * @return
+     */
+    private String getUserDirPath() {
+        return System.getProperty("user.dir");
     }
 }

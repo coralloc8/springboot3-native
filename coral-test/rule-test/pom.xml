@@ -424,9 +424,9 @@
                         </buildArg>
                         <!-- 反射 -->
                         <buildArg>
-                            -H:ReflectionConfigurationResources=META-INF/native-image/reflect-config.json,META-INF/native-image/com.coral.test/spring-native-test/reflect-config.json
-                            -H:ResourceConfigurationResources=META-INF/native-image/resource-config.json,META-INF/native-image/com.coral.test/spring-native-test/resource-config.json
-                            -H:DynamicProxyConfigurationResources=META-INF/native-image/proxy-config.json,META-INF/native-image/com.coral.test/spring-native-test/proxy-config.json
+                            -H:ReflectionConfigurationResources=META-INF/native-image/reflect-config.json,META-INF/native-image/com.coral.test/rule-test/reflect-config.json
+                            -H:ResourceConfigurationResources=META-INF/native-image/resource-config.json,META-INF/native-image/com.coral.test/rule-test/resource-config.json
+                            -H:DynamicProxyConfigurationResources=META-INF/native-image/proxy-config.json,META-INF/native-image/com.coral.test/rule-test/proxy-config.json
                             -H:JNIConfigurationResources=META-INF/native-image/jni-config.json
                         </buildArg>
                         <buildArg>
@@ -456,8 +456,10 @@
                             --initialize-at-build-time=cn.hutool.core.util.ClassLoaderUtil
                             --initialize-at-build-time=cn.hutool.core.convert.BasicType
                             --initialize-at-build-time=cn.hutool.core.util.CharsetUtil
+
+                            --initialize-at-build-time=org.apache.commons.logging.LogFactory,cn.hutool.core.io.FileUtil,org.apache.commons.logging.LogFactoryService
                             <!-- features -->
-                            --features=com.coral.test.spring.natives.core.feature.RuntimeRegistrationFeature
+                            --features=com.coral.test.rule.core.feature.RuntimeRegistrationFeature
                         </buildArg>
                         <buildArg>
                             --add-reads jdk.jfr=ALL-UNNAMED

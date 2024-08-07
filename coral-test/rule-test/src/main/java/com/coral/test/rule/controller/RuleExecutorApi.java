@@ -14,28 +14,26 @@ import static com.coral.test.rule.config.ApiVersion.SUCCESS_CODE;
 import static com.coral.test.rule.config.ApiVersion.SUCCESS_NAME;
 
 /**
- * 事件日志
+ * 规则执行器
  *
  * @author huss
  * @date 2024/3/28 17:16
  * @packageName org.com.coral.test.spring.natives.controller
- * @className EventLogController
+ * @className RuleExecutorApi
  */
-
 @Tags
-public interface RuleTestApi {
+public interface RuleExecutorApi {
 
-//    @Operation(summary = "【规则】执行规则", description = "【规则】执行规则", tags = {ApiVersion.API_1_0_0})
-//    @ApiResponses({
-//            @ApiResponse(
-//                    description = SUCCESS_NAME,
-//                    responseCode = SUCCESS_CODE,
-//                    content = @Content(
-//                            schema = @Schema(implementation = EventLogInfoDTO.class)
-//                    )
-//            )
-//    })
-//    Mono<IResult<EventLogInfoDTO>> saveEventLog(EventLogSaveDTO eventLogSave);
-
+    @Operation(summary = "【规则执行器】开始执行", description = "【规则执行器】开始执行", tags = {ApiVersion.API_1_0_0})
+    @ApiResponses({
+            @ApiResponse(
+                    description = SUCCESS_NAME,
+                    responseCode = SUCCESS_CODE,
+                    content = @Content(
+                            schema = @Schema(implementation = Void.class)
+                    )
+            )
+    })
+    Mono<IResult<Void>> execute();
 
 }

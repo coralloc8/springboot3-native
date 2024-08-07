@@ -28,7 +28,7 @@ spring:
     settings:
       template_update_delay: 0 #检查模板更新延迟时间，设置为0表示立即检查，如果时间大于0会有缓存不方便进行模板测试
     suffix: .ftl               #指定Freemarker模板文件的后缀名
-
+    template-loader-path: classpath:/templates/ftl/
   # 远端配置
   config:
     import:

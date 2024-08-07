@@ -16,7 +16,7 @@ import java.util.Set;
  *
  * @author huss
  * @date 2024/4/12 10:34
- * @packageName com.coral.test.spring.simple.core.feature
+ * @packageName com.coral.test.rule.core.feature
  * @className RuntimeRegistrationFeature
  */
 public class RuntimeRegistrationFeature implements Feature {

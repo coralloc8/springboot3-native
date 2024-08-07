@@ -65,7 +65,7 @@ coral:
     # 规则报告路径  相对路径
     rule-report-path: rule-report
     # 规则报告模板路径
-    report-template-path: templates
+    report-template-path: templates/html
     # 规则执行路径
     rule-execute-path: rule-execute
     # 规则执行配置文件名称

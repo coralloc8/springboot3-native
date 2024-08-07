@@ -104,37 +104,44 @@ public class RuleExecuteResponseInfoDTO {
                 return Optional.empty();
             }
             // 规则数据解析
-            List<String> resultAdviceItems = ((List<Map<String, Object>>) oneRuleResult.getOrDefault(resultAdviceItemsKey, Collections.emptyList()))
-                    .stream().map(item -> toString(item.getOrDefault(nameKey, "")))
-                    .filter(StringUtils::isNotBlank)
-                    .distinct()
-                    .collect(Collectors.toList());
-            Map<String, Map<String, Object>> specialDescListMap = ((List<Map<String, Object>>) oneRuleResult.getOrDefault(specialDescListKey, Collections.emptyList())).stream()
-                    .collect(Collectors.toMap(spec -> toString(spec.getOrDefault(diagnosisNameKey, "")), Function.identity(), (t1, t2) -> t2));
+            List<String> resultAdviceItems = new ArrayList<>();
+            List<ItemEvidenceInfo> itemEvidenceInfos = new ArrayList<>();
+            List<Map<String, Object>> resultAdviceItemInfos = ((List<Map<String, Object>>) oneRuleResult.get(resultAdviceItemsKey));
+            if (CollUtil.isNotEmpty(resultAdviceItemInfos)) {
+                resultAdviceItems = resultAdviceItemInfos.stream()
+                        .map(item -> toString(item.getOrDefault(nameKey, "")))
+                        .filter(StringUtils::isNotBlank)
+                        .distinct()
+                        .collect(Collectors.toList());
+                Map<String, Map<String, Object>> specialDescListMap = ((List<Map<String, Object>>) oneRuleResult.getOrDefault(specialDescListKey, Collections.emptyList())).stream()
+                        .collect(Collectors.toMap(spec -> toString(spec.getOrDefault(diagnosisNameKey, "")), Function.identity(), (t1, t2) -> t2));
 
-            List<ItemEvidenceInfo> itemEvidenceInfos = resultAdviceItems.stream()
-                    .filter(specialDescListMap::containsKey)
-                    .map(item -> {
-                        Map<String, Object> specialDesc = specialDescListMap.get(item);
+                itemEvidenceInfos = resultAdviceItems.stream()
+                        .filter(specialDescListMap::containsKey)
+                        .map(item -> {
+                            Map<String, Object> specialDesc = specialDescListMap.get(item);
+                            List<Map<String, Object>> basisList = ((List<Map<String, Object>>) specialDesc.get(basisListKey));
+                            List<EvidenceDetailInfo> evidenceDetailInfos = new ArrayList<>();
 
-                        List<EvidenceDetailInfo> evidenceDetailInfos = ((List<Map<String, Object>>) specialDesc.getOrDefault(basisListKey, Collections.emptyList())).stream()
-                                .map(basis -> {
-                                    return EvidenceDetailInfo.builder()
-                                            .moduleName(toString(basis.getOrDefault(moduleNameKey, "")))
-                                            .indexName(toString(basis.getOrDefault(indexNameKey, "")))
-                                            .tipTitle(toString(basis.getOrDefault(tipTitleKey, "")))
-                                            .tipContent(toString(basis.getOrDefault(tipContentKey, "")))
-                                            .build();
-                                }).collect(Collectors.toList());
+                            if (CollUtil.isNotEmpty(basisList)) {
+                                evidenceDetailInfos = basisList.stream()
+                                        .map(basis -> EvidenceDetailInfo.builder()
+                                                .moduleName(toString(basis.getOrDefault(moduleNameKey, "")))
+                                                .indexName(toString(basis.getOrDefault(indexNameKey, "")))
+                                                .tipTitle(toString(basis.getOrDefault(tipTitleKey, "")))
+                                                .tipContent(toString(basis.getOrDefault(tipContentKey, "")))
+                                                .build())
+                                        .collect(Collectors.toList());
+                            }
 
-                        return ItemEvidenceInfo.builder()
-                                .adviceItem(item)
-                                .diagnosisStandard(toString(specialDesc.getOrDefault(diagnosisStandardKey, "")))
-                                .treatmentPlans((List<String>) specialDesc.getOrDefault(treatmentPlansKey, Collections.emptyList()))
-                                .evidenceDetailInfos(evidenceDetailInfos)
-                                .build();
-                    }).collect(Collectors.toList());
-
+                            return ItemEvidenceInfo.builder()
+                                    .adviceItem(item)
+                                    .diagnosisStandard(toString(specialDesc.getOrDefault(diagnosisStandardKey, "")))
+                                    .treatmentPlans((List<String>) specialDesc.getOrDefault(treatmentPlansKey, Collections.emptyList()))
+                                    .evidenceDetailInfos(evidenceDetailInfos)
+                                    .build();
+                        }).collect(Collectors.toList());
+            }
             // 提示字段解析
             ruleTipsNodeResult = (List<Map<String, Object>>) oneRuleResult.get(qualityFieldListKey);
             List<String> fieldPromptKeys = new ArrayList<>();

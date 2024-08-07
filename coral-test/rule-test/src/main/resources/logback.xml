@@ -105,6 +105,16 @@
             <appender-ref ref="FILE-ERROR"/>
         </root>
     </springProfile>
+    <!--本地环境-->
+    <springProfile name="local">
+        <property name="logback.log.level" value="info"/>
+        <root level="${logback.log.level}">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE-DEBUG"/>
+            <appender-ref ref="FILE-INFO"/>
+            <appender-ref ref="FILE-ERROR"/>
+        </root>
+    </springProfile>
     <!--生产环境-->
     <springProfile name="prod">
         <property name="logback.log.level" value="INFO"/>
