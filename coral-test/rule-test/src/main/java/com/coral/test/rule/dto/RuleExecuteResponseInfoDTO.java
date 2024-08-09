@@ -159,7 +159,7 @@ public class RuleExecuteResponseInfoDTO {
             RuleExecuteResponseInfoDTO info = RuleExecuteResponseInfoDTO.builder()
                     .ruleCode(toString(oneRuleResult.getOrDefault(ruleCodeKey, "")))
                     .ruleName(toString(oneRuleResult.getOrDefault(ruleNameKey, "")))
-                    .ruleDesc(ruleConfigInfo.getDesc())
+                    .ruleDescs(ruleConfigInfo.getDescs())
                     .resultAdvice(toString(oneRuleResult.getOrDefault(resultAdviceKey, "")))
                     .resultDesc(toString(oneRuleResult.getOrDefault(resultDescKey, "")))
                     .specialDesc(Boolean.valueOf(toString(oneRuleResult.getOrDefault(specialDescKey, false))))
@@ -190,7 +190,7 @@ public class RuleExecuteResponseInfoDTO {
     /**
      * 规则说明
      */
-    private String ruleDesc;
+    private List<String> ruleDescs;
 
     /**
      * 规则名称

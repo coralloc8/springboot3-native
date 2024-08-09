@@ -1,25 +1,28 @@
 {
   "rule_code": "QD0030001",
   "rule_name": "会诊记录提示疾病",
-  "desc": "会诊记录提示疾病，模拟患者测试",
+  "descs": [
+    "会诊记录提示疾病，以西医出院主诊【J18.000-支气管肺炎】为例。",
+    "最终的预期结果应该为【xxx】"
+  ],
   "unique_key": "primary_id",
   "select_keys": [
     "hosp_code",
     "stlm_sn"
   ],
   "required": {
-    "org_code": "H41088200229",
-    "org_name": "庆阳市人民医院",
-    "hosp_code": "QYSRMYY",
-    "patient_id": "MOCK_522623202101262816",
-    "ipt_sn": "MOCK_2023013302",
-    "patient_name": "QD0030001测试001",
-    "stlm_sn": "MOCK_2023013302stlm_sn"
+    "org_code": "H52262300006",
+    "org_name": "施秉县人民医院",
+    "hosp_code": "SBXRMYY",
+    "patient_id": "2024080930001",
+    "ipt_sn": "2024080930001101",
+    "patient_name": "李*莲",
+    "stlm_sn": "2024080930001301"
   },
   "optional": {
     "ipt_no": "MOCK_2023013302",
     "mi_record_num": "",
-    "sn": "MOCK_2023013302sn"
+    "sn": "2024080930001201"
   },
   "settings": [
     {

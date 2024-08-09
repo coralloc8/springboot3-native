@@ -1,7 +1,9 @@
 {
   "rule_code": "QD0030001",
   "rule_name": "会诊记录提示疾病",
-  "desc": "会诊记录提示疾病，模拟患者测试",
+  "descs": [
+    "会诊记录提示疾病，模拟患者测试"
+  ],
   "unique_key": "primary_id",
   "select_keys": [
     "hosp_code",

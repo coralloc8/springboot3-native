@@ -46,7 +46,11 @@ public class RuleConfigInfoDTO {
 
     @NotBlank(message = "规则测试说明不能为空")
     @Schema(description = "规则测试说明")
-    private String desc;
+    private List<String> descs;
+
+    @NotBlank(message = "预期结果不能为空")
+    @Schema(description = "预期结果")
+    private String expectedResult;
 
     @Schema(description = "唯一键（此处配置为全局的，下面的局部会覆盖此处全局的配置）")
     private String uniqueKey;
