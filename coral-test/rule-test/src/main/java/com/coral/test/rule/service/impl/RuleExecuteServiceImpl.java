@@ -4,10 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import com.coral.test.rule.config.RuleProperty;
 import com.coral.test.rule.core.json.JsonUtil;
-import com.coral.test.rule.dto.RuleConfigInfoDTO;
-import com.coral.test.rule.dto.RuleExecuteInfoDTO;
-import com.coral.test.rule.dto.RuleExecuteResponseInfoDTO;
-import com.coral.test.rule.dto.SqlInfoDTO;
+import com.coral.test.rule.dto.*;
 import com.coral.test.rule.service.BizRuleApplyConfigQueryService;
 import com.coral.test.rule.service.RuleExecuteService;
 import com.coral.test.rule.util.FreeMarkerUtils;
@@ -27,8 +24,10 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -43,6 +42,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class RuleExecuteServiceImpl implements RuleExecuteService {
+
+    private static final String HTML_RULE_INDEX_PREFIX = "rule_index";
+
+    private static final int API_TIMEOUT_SECOND = 30;
 
     private final R2dbcEntityTemplate template;
 
@@ -148,39 +151,12 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                                   Set<String> ruleFilePrefixNames,
                                   List<RuleExecuteResponseInfoDTO> ruleResponses,
                                   Template templateIndex) {
-        long period = 1; //秒
-        final long maxExecutions = RuleProperty.EXECUTE_TIMOUT / period; // 设置最大执行次数
-        final AtomicInteger executionCount = new AtomicInteger(0);
-        taskExecutor.execute(() -> {
-            while (true) {
-                int currentExecution = executionCount.incrementAndGet();
-                boolean printLog = false;
-                if (currentExecution > maxExecutions) {
-                    // 关闭executorService
-                    log.info("【waitAllCompleted】任务执行次数已达到最大限制，结束本次任务。");
-                    printLog = true;
-                }
-                boolean allCompleted = totalMap.entrySet().stream()
-                        .allMatch(entry -> allCounter.get(entry.getKey()).get() == entry.getValue());
-                if (allCompleted) {
-                    log.info("【waitAllCompleted】全部任务执行完成，结束本次任务。");
-                    printLog = true;
-                }
-                if (printLog) {
-                    // todo 生成index页面
-
-
-                    log.info("\n######################################## 【规则执行】.【执行结束】 ########################################\n");
-                    return;
-                }
-                try {
-                    Thread.sleep(period * 1000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-        });
+        Supplier<Boolean> allCompleted = () -> totalMap.entrySet().stream()
+                .allMatch(entry -> allCounter.get(entry.getKey()).get() == entry.getValue());
+        if (waitCompleted(allCompleted, RuleProperty.EXECUTE_TIMOUT)) {
+            writeIndexFile(ruleFilePrefixNames, ruleResponses, templateIndex);
+            log.info("\n######################################## 【规则执行】.【执行结束】 ########################################\n");
+        }
     }
 
     /**
@@ -202,34 +178,44 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                         .collect(Collectors.toList())
                 )
                 .subscribe(ruleExecs -> {
+                            int count = ruleExecs.size();
                             if (CollUtil.isEmpty(ruleExecs)) {
                                 log.info("【规则执行】.未能找到符合条件的api接口.fileName:[{}].ruleCode:[{}].【流程终止】", ruleConfig.getFileName(), ruleConfig.getRuleCode());
+                                counter.incrementAndGet();
                                 return;
                             }
+                            AtomicInteger current = new AtomicInteger(0);
                             ruleExecs.forEach(ruleExecute -> {
                                 // 规则执行
                                 log.info("\n ##### 【规则执行】.规则执行中.fileName:[{}].ruleCode:[{}] #####", ruleConfig.getFileName(), ruleConfig.getRuleCode());
                                 RuleParseHelper.getInstance().httpSendAsync(ruleExecute, ruleConfig).whenCompleteAsync((res, err) -> {
                                     if (Objects.nonNull(err)) {
                                         log.error("【规则执行】.执行异常.fileName:[{}].ruleCode:[{}].【流程终止】", ruleConfig.getFileName(), ruleConfig.getRuleCode(), err);
+                                        current.incrementAndGet();
                                         return;
                                     }
                                     // todo 规则解析部分后续可以独立出来
                                     Optional<RuleExecuteResponseInfoDTO> responseOpt = RuleExecuteResponseInfoDTO.parse(res, ruleConfig, ruleExecute);
                                     if (responseOpt.isEmpty()) {
                                         log.info("【规则执行】.返回值为空.fileName:[{}].ruleCode:[{}].【流程终止】", ruleConfig.getFileName(), ruleConfig.getRuleCode());
+                                        current.incrementAndGet();
                                         return;
                                     }
                                     RuleExecuteResponseInfoDTO responseInfo = responseOpt.get();
                                     // todo 文件写入后续可以独立出来
                                     writeFile(responseInfo, ruleConfig.getFileName(), ruleExecute.getApiService(), template);
                                     ruleResponses.add(responseInfo);
+                                    log.info("【规则执行】.ruleCode:[{}].响应结果+1", ruleConfig.getRuleCode());
+                                    current.incrementAndGet();
                                 });
                             });
-                            //
+                            if (waitCompleted(() -> current.get() == count, API_TIMEOUT_SECOND)) {
+                                log.info("【规则执行】.ruleCode:[{}].计数器+1.", ruleConfig.getRuleCode());
+                                counter.incrementAndGet();
+                            }
                         },
                         error -> log.error("【规则执行】.Error: " + error), // 错误时的回调
-                        counter::incrementAndGet // 完成时的回调
+                        () -> log.info("【规则执行】.Completed.") // 完成时的回调
                 );
     }
 
@@ -306,7 +292,7 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
         log.info("【文件写入】. markdown 文件全路径: [{}]", markdownFileName);
         log.info("【文件写入】. html 文件全路径: [{}]", htmlFileName);
         try {
-            String markdown = FreeMarkerUtils.createDefRuleReport(template, responseInfo);
+            String markdown = FreeMarkerUtils.create(template, responseInfo);
             if (StringUtils.isBlank(markdown)) {
                 log.info("【文件写入】.创建markdown文件失败.规则:[{}].", responseInfo.getRuleCode());
                 return;
@@ -323,5 +309,69 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
         }
     }
 
+    private void writeIndexFile(Set<String> ruleFilePrefixNames, List<RuleExecuteResponseInfoDTO> ruleResponses, Template templateIndex) {
+        String basePath = RuleParseHelper.getInstance().getAbsolutePathByUserDir(RuleProperty.RULE_REPORT_PATH);
+        final String markdownFileName = Path.of(basePath, "markdown", HTML_RULE_INDEX_PREFIX + ".md").toString();
+        final String htmlFileName = Path.of(basePath, "html", HTML_RULE_INDEX_PREFIX + ".html").toString();
+        log.info("【index文件写入】. markdown 文件全路径: [{}]", markdownFileName);
+        log.info("【index文件写入】. html 文件全路径: [{}]", htmlFileName);
+        try {
+            List<RuleReportIndexInfoDTO> ruleReportIndexs = RuleReportIndexInfoDTO.create(ruleResponses, ruleFilePrefixNames);
+            Set<String> ruleCodes = ruleFilePrefixNames.stream().map(e -> e.substring(0, e.lastIndexOf("_"))).collect(Collectors.toSet());
+            log.debug(">>>>> 【index文件写入】 response json数据为:\n{}", JsonUtil.toJson(ruleResponses));
+            log.debug(">>>>> 【index文件写入】 json数据为:\n{}", JsonUtil.toJson(ruleReportIndexs));
+            Map<String, Object> map = new HashMap<>();
+            map.put("ruleCodes", ruleCodes);
+            map.put("indexs", ruleReportIndexs);
+            String markdown = FreeMarkerUtils.create(templateIndex, map);
+            if (StringUtils.isBlank(markdown)) {
+                log.info("【index文件写入】.创建markdown文件失败.");
+                return;
+            }
+            FileUtil.writeString(markdown, markdownFileName, StandardCharsets.UTF_8);
+            log.debug("【index文件写入】.markdown文件内容为：\n {}", markdown);
+            log.info("【index文件写入】.创建markdown文件成功.");
+            String html = MarkdownUtils.markdownToHtml(markdown);
+            FileUtil.writeString(html, htmlFileName, StandardCharsets.UTF_8);
+            log.debug("【index文件写入】.html文件内容为：\n {}", html);
+            log.info("【index文件写入】.创建html文件成功.");
+        } catch (Exception e) {
+            log.error("【index文件写入】异常.", e);
+        }
+    }
 
+    private boolean waitCompleted(Supplier<Boolean> supplier, long timeoutOfSecond) {
+        long period = 1; //秒
+        final long maxExecutions = timeoutOfSecond / period; // 设置最大执行次数
+        final AtomicInteger executionCount = new AtomicInteger(0);
+
+        Timer timer = new Timer();
+        try {
+            CompletableFuture<Boolean> future = new CompletableFuture<>();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    boolean finished = false;
+                    int currentExecution = executionCount.incrementAndGet();
+                    if (currentExecution > maxExecutions) {
+                        // 关闭executorService
+                        log.info("【waitCompleted】任务执行次数已达到最大限制，结束本次任务。");
+                        finished = true;
+                    }
+                    if (supplier.get()) {
+                        log.info("【waitCompleted】任务执行完成，结束本次任务。");
+                        finished = true;
+                    }
+                    if (finished) {
+                        future.complete(true);
+                        cancel();
+                    }
+                }
+            }, 0, period * 1000);
+            return future.get(timeoutOfSecond, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            log.error("【waitCompleted】 Error.", e);
+        }
+        return false;
+    }
 }

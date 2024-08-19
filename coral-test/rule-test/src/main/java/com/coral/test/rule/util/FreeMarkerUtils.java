@@ -44,30 +44,9 @@ public class FreeMarkerUtils {
     }
 
     /**
-     * 创建默认的规则报表
-     *
-     * @param model
-     * @return
-     */
-    public static String createDefRuleReport(Template template, Object model) {
-        return create(template, model);
-    }
-
-    /**
-     * 创建默认的规则报表
-     *
-     * @param model
-     * @return
-     */
-    public static String createDefRuleReport(Object model) {
-        return create(RULE_REPORT_TEMPLATE_NAME, model);
-    }
-
-
-    /**
      * 创建模板
      *
-     * @param templateName
+     * @param template
      * @param model
      * @return
      */
