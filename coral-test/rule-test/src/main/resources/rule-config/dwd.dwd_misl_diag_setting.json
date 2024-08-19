@@ -11,9 +11,7 @@
       "main_diag_flag_code": "1",
       "main_diag_flag_name": "是",
       "diag_sort_code": "1",
-      "diag_sort_name": "西医",
-      "diag_type_code_std_derive": "020102",
-      "diag_type_name_std_derive": "西医出院主要诊断"
+      "diag_sort_name": "西医"
     }
   },
   {
@@ -28,9 +26,7 @@
       "main_diag_flag_code": "2",
       "main_diag_flag_name": "否",
       "diag_sort_code": "1",
-      "diag_sort_name": "西医",
-      "diag_type_code_std_derive": "020102",
-      "diag_type_name_std_derive": "西医出院其他诊断"
+      "diag_sort_name": "西医"
     }
   },
   {
@@ -45,9 +41,7 @@
       "main_diag_flag_code": "2",
       "main_diag_flag_name": "否",
       "diag_sort_code": "1",
-      "diag_sort_name": "西医",
-      "diag_type_code_std_derive": "0101",
-      "diag_type_name_std_derive": "西医门（急）诊诊断"
+      "diag_sort_name": "西医"
     }
   },
   {
@@ -62,9 +56,7 @@
       "main_diag_flag_code": "2",
       "main_diag_flag_name": "否",
       "diag_sort_code": "1",
-      "diag_sort_name": "西医",
-      "diag_type_code_std_derive": "09",
-      "diag_type_name_std_derive": "病理诊断"
+      "diag_sort_name": "西医"
     }
   }
 ]

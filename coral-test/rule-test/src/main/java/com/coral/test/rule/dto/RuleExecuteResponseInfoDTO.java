@@ -35,10 +35,10 @@ public class RuleExecuteResponseInfoDTO {
      *
      * @param response
      * @param ruleConfigInfo
-     * @param apiKey
+     * @param ruleExecute
      * @return
      */
-    public static Optional<RuleExecuteResponseInfoDTO> parse(String response, RuleConfigInfoDTO ruleConfigInfo, String apiKey) {
+    public static Optional<RuleExecuteResponseInfoDTO> parse(String response, RuleConfigInfoDTO ruleConfigInfo, RuleExecuteInfoDTO ruleExecute) {
         if (StringUtils.isBlank(response)) {
             return Optional.empty();
         }
@@ -83,9 +83,9 @@ public class RuleExecuteResponseInfoDTO {
             List<Map<String, Object>> ruleTipsNodeResult = (List<Map<String, Object>>) map.get(ruleTipsNodeResultKey);
 
             Map<String, Object> oneRuleResult = !ruleTipsNodeResult.isEmpty() ? ruleTipsNodeResult.get(0) : new HashMap<>();
-            if (StringUtils.isNotBlank(apiKey)) {
+            if (StringUtils.isNotBlank(ruleExecute.getApiKey())) {
                 oneRuleResult = ruleTipsNodeResult.stream()
-                        .filter(res -> toString(res.getOrDefault(tipsNodeKey, "")).equals(apiKey))
+                        .filter(res -> toString(res.getOrDefault(tipsNodeKey, "")).equals(ruleExecute.getApiKey()))
                         .findFirst()
                         .orElse(Collections.emptyMap());
             }
@@ -154,12 +154,17 @@ public class RuleExecuteResponseInfoDTO {
                         .distinct()
                         .collect(Collectors.toList());
             }
-
+            String fileNameWithoutType = ruleConfigInfo.getFileName().substring(0, ruleConfigInfo.getFileName().lastIndexOf("."));
             // 数据组装
             RuleExecuteResponseInfoDTO info = RuleExecuteResponseInfoDTO.builder()
                     .ruleCode(toString(oneRuleResult.getOrDefault(ruleCodeKey, "")))
                     .ruleName(toString(oneRuleResult.getOrDefault(ruleNameKey, "")))
+                    .ruleFileName(fileNameWithoutType)
+                    .apiService(ruleExecute.getApiService())
                     .ruleDescs(ruleConfigInfo.getDescs())
+                    .expectedResult(ruleConfigInfo.getExpectedResult())
+                    .expectedResultKeywords(ruleConfigInfo.getExpectedResultKeywords())
+                    .expectedResultItems(ruleConfigInfo.getExpectedResultItems())
                     .resultAdvice(toString(oneRuleResult.getOrDefault(resultAdviceKey, "")))
                     .resultDesc(toString(oneRuleResult.getOrDefault(resultDescKey, "")))
                     .specialDesc(Boolean.valueOf(toString(oneRuleResult.getOrDefault(specialDescKey, false))))
@@ -196,6 +201,31 @@ public class RuleExecuteResponseInfoDTO {
      * 规则名称
      */
     private String ruleName;
+
+    /**
+     * 规则文件名
+     */
+    private String ruleFileName;
+
+    /**
+     * 服务名
+     */
+    private String apiService;
+
+    /**
+     * 预期结果
+     */
+    private String expectedResult;
+
+    /**
+     * 预期结果关键字列表
+     */
+    private List<String> expectedResultKeywords;
+
+    /**
+     * 预期结果细项
+     */
+    private List<String> expectedResultItems;
 
     /**
      * 规则建议
@@ -238,6 +268,39 @@ public class RuleExecuteResponseInfoDTO {
                 String.join("  ", getResultAdviceItems());
     }
 
+    /**
+     * 是否和预期结果一致
+     *
+     * @return
+     */
+    public Boolean getTestResult() {
+        boolean adviceMatch = false;
+        boolean adviceKeywordMatch = false;
+        boolean adviceItemMatch = true;
+
+        if (StringUtils.isBlank(getExpectedResult()) && CollUtil.isEmpty(getExpectedResultKeywords())) {
+            adviceMatch = true;
+            adviceKeywordMatch = true;
+        }
+
+        if (StringUtils.isNotBlank(getExpectedResult()) && StringUtils.isNotBlank(getResultAdvice())) {
+            adviceMatch = getResultAdvice().contains(getExpectedResult());
+        }
+        if (CollUtil.isNotEmpty(getExpectedResultKeywords()) && StringUtils.isNotBlank(getResultAdvice())) {
+            adviceKeywordMatch = getExpectedResultKeywords().stream().allMatch(getResultAdvice()::contains);
+        }
+        if (CollUtil.isNotEmpty(getExpectedResultKeywords()) && CollUtil.isNotEmpty(getResultAdviceItems())) {
+            adviceKeywordMatch = adviceKeywordMatch || getExpectedResultKeywords().stream()
+                    .allMatch(key -> getResultAdviceItems().stream().anyMatch(item -> item.contains(key)));
+        }
+
+        if (CollUtil.isNotEmpty(getExpectedResultItems()) && CollUtil.isNotEmpty(getResultAdviceItems())) {
+            adviceItemMatch = getExpectedResultItems().stream()
+                    .allMatch(key -> getResultAdviceItems().stream().anyMatch(item -> item.contains(key)));
+        }
+
+        return (adviceMatch || adviceKeywordMatch) && adviceItemMatch;
+    }
 
     @Builder
     @AllArgsConstructor

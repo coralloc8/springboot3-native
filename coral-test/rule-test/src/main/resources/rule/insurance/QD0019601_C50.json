@@ -11,6 +11,11 @@
     "【逻辑】 DIP分组：【85.4301-单侧乳腺改良根治术】属于该西医主诊病组范围手术，而清单手术记录中也没有该手术，符合提示条件，会提示漏编",
     "【结果】 最终的预期结果应该为【单侧乳腺改良根治术】"
   ],
+  "expected_result": "",
+  "expected_result_keywords": [
+  ],
+  "expected_result_items": [
+  ],
   "unique_key": "primary_id",
   "select_keys": [
     "hosp_code",
@@ -54,13 +59,8 @@
     {
       "table": "dwd.dwd_misl_diag",
       "unique_key": "primary_id",
-      "select_keys": [
-        "hosp_code",
-        "ipt_sn",
-        "primary_id"
-      ],
       "pre_sqls": [
-        "delete from ${table} where hosp_code=${hosp_code} and ipt_sn=${ipt_sn};"
+        "delete from ${table} where hosp_code=${hosp_code} and stlm_sn=${stlm_sn};"
       ],
       "post_sqls": [],
       "field_mappings": [
@@ -84,7 +84,7 @@
       "table": "dwd.dwd_misl_opn",
       "unique_key": "primary_id",
       "pre_sqls": [
-        "delete from ${table} where hosp_code=${hosp_code} and ipt_sn=${ipt_sn};"
+        "delete from ${table} where hosp_code=${hosp_code} and stlm_sn=${stlm_sn};"
       ],
       "field_mapping": {
         "opn_code": "28.3x03",
@@ -96,6 +96,11 @@
     {
       "table": "dwd.dwd_emr_opn",
       "unique_key": "primary_id",
+      "select_keys": [
+        "hosp_code",
+        "ipt_sn",
+        "primary_id"
+      ],
       "pre_sqls": [
         "delete from ${table} where hosp_code=${hosp_code} and ipt_sn=${ipt_sn};"
       ],
@@ -107,7 +112,6 @@
           "hosp_opn_name_std": "$扁桃体切除术不伴腺样增殖体切除术$"
         },
         {
-
           "hosp_opn_code": "85.4301",
           "hosp_opn_name": "单侧乳腺改良根治术",
           "hosp_opn_code_std": "$85.4301$",

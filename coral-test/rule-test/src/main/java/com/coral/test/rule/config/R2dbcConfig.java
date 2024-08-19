@@ -64,7 +64,7 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
             // aot编译不通过
             connectionFactoryOptions = ConnectionFactoryOptions.builder()
                     .option(ConnectionFactoryOptions.DRIVER, "postgresql")
-                    .option(ConnectionFactoryOptions.HOST, "192.168.29.64")
+                    .option(ConnectionFactoryOptions.HOST, "192.168.29.112")
                     .option(ConnectionFactoryOptions.PORT, 3306)
                     .option(ConnectionFactoryOptions.DATABASE, "bigdata")
                     .option(ConnectionFactoryOptions.USER, "app")

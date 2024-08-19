@@ -23,11 +23,20 @@ public class FreeMarkerUtils {
     // 默认模板名称
     private static final String RULE_REPORT_TEMPLATE_NAME = "rule_report.md.ftl";
 
+    private static final String RULE_INDEX_TEMPLATE_NAME = "rule_index.md.ftl";
 
     /**
      * 获取默认的规则报表模板
      *
-     * @param model
+     * @return
+     */
+    public static Optional<Template> getDefRuleIndex() {
+        return getTemplate(RULE_INDEX_TEMPLATE_NAME);
+    }
+
+    /**
+     * 获取默认的规则报表模板
+     *
      * @return
      */
     public static Optional<Template> getDefRuleReport() {

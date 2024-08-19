@@ -20,15 +20,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.result.view.freemarker.FreeMarkerConfigurer;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -58,16 +54,18 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
 
     @Override
     public Mono<Void> execute() {
-        Optional<Template> templateOptional = Optional.empty();
+        Optional<Template> templateReportOpt = Optional.empty();
+        Optional<Template> templateIndexOpt = Optional.empty();
         try {
             // todo 打包成jar的情况下 目前在 流内部获取模板失败 需排查
-            templateOptional = FreeMarkerUtils.getDefRuleReport();
+            templateReportOpt = FreeMarkerUtils.getDefRuleReport();
+            templateIndexOpt = FreeMarkerUtils.getDefRuleIndex();
         } catch (Exception e) {
             log.error(">>>>> 获取 规则报告模板失败:", e);
         }
-        Optional<Template> finalTemplateOptional = templateOptional;
+        Optional<Template> finalTemplateOptional = templateReportOpt;
+        Optional<Template> finalTemplateIndexOpt = templateIndexOpt;
         return Mono.fromFuture(CompletableFuture.runAsync(() -> {
-
             log.info("\n######################################## 【规则执行】.【执行开始】 ########################################\n");
             String basePath = RuleProperty.RULE_EXECUTE_PATH;
             List<String> fileNames = RuleParseHelper.getInstance().findFiles(basePath, null);
@@ -76,6 +74,7 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                 return;
             }
             log.info("【规则执行】.查询到需要执行的规则文件列表为：{}", fileNames);
+
             List<RuleConfigInfoDTO> ruleConfigReqs = fileNames.stream()
                     .filter(fileName -> !RuleProperty.EXECUTE_CONFIG_NAME.equalsIgnoreCase(fileName))
                     .map(fileName -> {
@@ -86,11 +85,18 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                         }
                         return ruleConfigInfo;
                     }).filter(Objects::nonNull).toList();
+
             //
             if (CollUtil.isEmpty(ruleConfigReqs)) {
                 log.info("【规则执行】.解析规则文件结束,规则列表为空.【流程终止】");
                 return;
             }
+
+            // 需要执行的规则 编码集合
+            Set<String> ruleFilePrefixNames = ruleConfigReqs.stream()
+                    .map(e -> e.getFileName().substring(0, e.getFileName().lastIndexOf(".")))
+                    .collect(Collectors.toSet());
+
             // 执行文件
             String json = RuleParseHelper.getInstance().readFileContent(basePath, RuleProperty.EXECUTE_CONFIG_NAME);
             if (StringUtils.isBlank(json)) {
@@ -109,6 +115,8 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
             Map<String, AtomicLong> allCounter = ruleConfigGroupMap.keySet().stream()
                     .collect(Collectors.toMap(k -> k, v -> new AtomicLong(0)));
 
+            List<RuleExecuteResponseInfoDTO> ruleResponses = new ArrayList<>();
+
             final Template template = finalTemplateOptional.orElse(null);
             ruleConfigGroupMap.entrySet().parallelStream().forEach(entry -> {
                 List<RuleConfigInfoDTO> configs = entry.getValue();
@@ -118,11 +126,11 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                     // 数据准备
                     dataPreparation(config);
                     // 规则执行
-
-                    executeOneRule(config, ruleExecutes, counter, template);
+                    executeOneRule(config, ruleExecutes, counter, template, ruleResponses);
                 });
             });
-            waitAllCompleted(totalMap, allCounter);
+            final Template templateIndex = finalTemplateIndexOpt.orElse(null);
+            waitAllCompleted(totalMap, allCounter, ruleFilePrefixNames, ruleResponses, templateIndex);
         }));
     }
 
@@ -131,38 +139,61 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
      *
      * @param totalMap
      * @param allCounter
+     * @param ruleFilePrefixNames
+     * @param ruleResponses
+     * @param templateIndex
      */
-    private void waitAllCompleted(Map<String, Integer> totalMap, Map<String, AtomicLong> allCounter) {
+    private void waitAllCompleted(Map<String, Integer> totalMap,
+                                  Map<String, AtomicLong> allCounter,
+                                  Set<String> ruleFilePrefixNames,
+                                  List<RuleExecuteResponseInfoDTO> ruleResponses,
+                                  Template templateIndex) {
         long period = 1; //秒
         final long maxExecutions = RuleProperty.EXECUTE_TIMOUT / period; // 设置最大执行次数
         final AtomicInteger executionCount = new AtomicInteger(0);
         taskExecutor.execute(() -> {
-            int currentExecution = executionCount.incrementAndGet();
-            boolean printLog = false;
-            if (currentExecution > maxExecutions) {
-                // 关闭executorService
-                log.info("【waitAllCompleted】任务执行次数已达到最大限制，结束本次任务。");
-                printLog = true;
+            while (true) {
+                int currentExecution = executionCount.incrementAndGet();
+                boolean printLog = false;
+                if (currentExecution > maxExecutions) {
+                    // 关闭executorService
+                    log.info("【waitAllCompleted】任务执行次数已达到最大限制，结束本次任务。");
+                    printLog = true;
+                }
+                boolean allCompleted = totalMap.entrySet().stream()
+                        .allMatch(entry -> allCounter.get(entry.getKey()).get() == entry.getValue());
+                if (allCompleted) {
+                    log.info("【waitAllCompleted】全部任务执行完成，结束本次任务。");
+                    printLog = true;
+                }
+                if (printLog) {
+                    // todo 生成index页面
+
+
+                    log.info("\n######################################## 【规则执行】.【执行结束】 ########################################\n");
+                    return;
+                }
+                try {
+                    Thread.sleep(period * 1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
-            boolean allCompleted = totalMap.entrySet().stream()
-                    .allMatch(entry -> allCounter.get(entry.getKey()).get() == entry.getValue());
-            if (allCompleted) {
-                log.info("【waitAllCompleted】全部任务执行完成，结束本次任务。");
-                printLog = true;
-            }
-            if (printLog) {
-                log.info("\n######################################## 【规则执行】.【执行结束】 ########################################\n");
-                return;
-            }
-            try {
-                Thread.sleep(period * 1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+
         });
     }
 
-    private void executeOneRule(RuleConfigInfoDTO ruleConfig, List<RuleExecuteInfoDTO> ruleExecutes, AtomicLong counter, Template template) {
+    /**
+     * 执行单条规则
+     *
+     * @param ruleConfig
+     * @param ruleExecutes
+     * @param counter
+     * @param template
+     * @param ruleResponses
+     */
+    private void executeOneRule(RuleConfigInfoDTO ruleConfig, List<RuleExecuteInfoDTO> ruleExecutes,
+                                AtomicLong counter, Template template, List<RuleExecuteResponseInfoDTO> ruleResponses) {
         bizRuleApplyConfigQueryService.findEnabledRules()
 //                .log("executeOneRule")
                 .filter(bizRule -> bizRule.getRuleCodes().contains(ruleConfig.getRuleCode()))
@@ -183,9 +214,8 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                                         log.error("【规则执行】.执行异常.fileName:[{}].ruleCode:[{}].【流程终止】", ruleConfig.getFileName(), ruleConfig.getRuleCode(), err);
                                         return;
                                     }
-
                                     // todo 规则解析部分后续可以独立出来
-                                    Optional<RuleExecuteResponseInfoDTO> responseOpt = RuleExecuteResponseInfoDTO.parse(res, ruleConfig, ruleExecute.getApiKey());
+                                    Optional<RuleExecuteResponseInfoDTO> responseOpt = RuleExecuteResponseInfoDTO.parse(res, ruleConfig, ruleExecute);
                                     if (responseOpt.isEmpty()) {
                                         log.info("【规则执行】.返回值为空.fileName:[{}].ruleCode:[{}].【流程终止】", ruleConfig.getFileName(), ruleConfig.getRuleCode());
                                         return;
@@ -193,6 +223,7 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                                     RuleExecuteResponseInfoDTO responseInfo = responseOpt.get();
                                     // todo 文件写入后续可以独立出来
                                     writeFile(responseInfo, ruleConfig.getFileName(), ruleExecute.getApiService(), template);
+                                    ruleResponses.add(responseInfo);
                                 });
                             });
                             //
@@ -292,6 +323,5 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
         }
     }
 
-    private final FreeMarkerConfigurer freeMarkerConfigurer;
 
 }

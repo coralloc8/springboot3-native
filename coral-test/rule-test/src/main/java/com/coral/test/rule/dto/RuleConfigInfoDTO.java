@@ -48,9 +48,14 @@ public class RuleConfigInfoDTO {
     @Schema(description = "规则测试说明")
     private List<String> descs;
 
-    @NotBlank(message = "预期结果不能为空")
     @Schema(description = "预期结果")
     private String expectedResult;
+
+    @Schema(description = "预期结果关键词")
+    private List<String> expectedResultKeywords;
+
+    @Schema(description = "预期结果细项")
+    private List<String> expectedResultItems;
 
     @Schema(description = "唯一键（此处配置为全局的，下面的局部会覆盖此处全局的配置）")
     private String uniqueKey;
@@ -125,5 +130,11 @@ public class RuleConfigInfoDTO {
         @Schema(description = "字段映射集")
         private List<Map<String, Object>> fieldMappings;
 
+    }
+
+    public static void main(String[] args) {
+        String str = String.format("%04d",-3L);
+        System.out.println(str);
+        System.out.println("-003-003-003");
     }
 }

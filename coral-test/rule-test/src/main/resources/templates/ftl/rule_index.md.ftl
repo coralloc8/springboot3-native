@@ -1,57 +1,21 @@
 [引言]
 <!-- TOC -->
-* [【规则名】](#规则名)
-* [【说明】](#规则说明)
-* [【类型】](#类型)
-* [【结果集】](#结果集)
-    * [【建议】](#建议)
-    * [【建议项】](#建议项)
-    * [【说明】](#说明)
-* [【提示字段】](#提示字段)
-<#if specialDesc>
-* [【循证依据】](#循证依据)
-    <#list itemEvidenceInfos as evi>
-    * [【${evi.adviceItem}】](#${evi.adviceItem})
-    </#list>
+<#list ruleCodes as code>
+* [【规则（${code}）】](#规则（${code}）)
+</#list>
 
-</#if>
 <!-- TOC -->
 
 
+<#list indexs as index>
+# 【规则（${index.ruleCode}）】
+${index.ruleName}
 
-# 【规则名】
-${ruleCode}
-# 【规则说明】
-<#list ruleDescs as field>
-* ${field}
-</#list>
-# 【规则类型】
-${ruleName}
-
--------------------
-# 【结果集】
-## 【建议】
-${resultAdvice}
-## 【建议项】
-${resultAdviceItemText}
-## 【说明】
-${resultDesc}
-
--------------------
-# 【提示字段】
-<#list promptFields as field>
-* ${field}
+|规则文件|业务结果|规则引擎结果|
+|-|-|-|
+<#list index.results as result>
+|${result.ruleFileName}|${(result.bizTestResult == "成功" ||  result.bizTestResult == "失败") ? string("["+result.bizTestResult+"]("+result.bizFilePath+")",result.bizTestResult)}|${(result.ruleTestResult == "成功" ||  result.ruleTestResult == "失败") ? string("["+result.ruleTestResult+"]("+result.ruleFilePath+")",result.ruleTestResult)}|
 </#list>
 
--------------------
-<#if specialDesc>
-# 【循证依据】
-<#list itemEvidenceInfos as evi>
-### 【${evi.adviceItem}】
-| 模块名称 | 指标名称 | 提示标题 | 提示内容 |
-|------|------|------|------|
-<#list evi.evidenceDetailInfos as detail>
-| ${detail.moduleName}   | ${detail.indexName}   |  ${detail.tipTitle}   |  ${detail.tipContent}  |
+
 </#list>
-</#list>
-</#if>

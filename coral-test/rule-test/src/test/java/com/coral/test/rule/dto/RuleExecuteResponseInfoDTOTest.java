@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 /**
  * 规则执行响应信息测试
  *
@@ -87,9 +89,11 @@ public class RuleExecuteResponseInfoDTOTest {
                 """;
         RuleConfigInfoDTO ruleConfigInfo = RuleConfigInfoDTO.builder()
                 .ruleCode("QD0071001")
-                .desc("出院小结提示疾病自动化测试")
+                .descs(List.of("出院小结提示疾病自动化测试"))
                 .build();
-        RuleExecuteResponseInfoDTO ruleExecuteResponseInfo = RuleExecuteResponseInfoDTO.parse(response, ruleConfigInfo, "循证校验").get();
+        RuleExecuteInfoDTO executeInfoDTO = new RuleExecuteInfoDTO();
+        executeInfoDTO.setApiKey("循证校验");
+        RuleExecuteResponseInfoDTO ruleExecuteResponseInfo = RuleExecuteResponseInfoDTO.parse(response, ruleConfigInfo, executeInfoDTO).get();
 
         System.out.println(JsonUtil.toJson(ruleExecuteResponseInfo));
     }

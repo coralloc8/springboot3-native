@@ -3,7 +3,7 @@
     "desc": "【医保结算清单】质控-循证校验",
     "api_service": "insurance",
     "api_key": "循证校验",
-    "url": "http://192.168.29.119:9000/api/insurance/v1/qc/verify/evidenceBased",
+    "url": "http://192.168.29.60:9000/api/insurance/v1/qc/verify/evidenceBased",
     "method": "POST",
     "content_type": "application/json",
     "data": {
@@ -17,7 +17,7 @@
     "desc": "【医保结算清单】质控-基础校验",
     "api_service": "insurance",
     "api_key": "基础校验",
-    "url": "http://192.168.29.119:9000/api/insurance/v1/qc/verify/basic",
+    "url": "http://192.168.29.60:9000/api/insurance/v1/qc/verify/basic",
     "method": "POST",
     "content_type": "application/json",
     "data": {
@@ -31,7 +31,7 @@
     "desc": "【医保结算清单】质控-编码校验",
     "api_service": "insurance",
     "api_key": "编码校验",
-    "url": "http://192.168.29.119:9000/api/insurance/v1/qc/verify/code",
+    "url": "http://192.168.29.60:9000/api/insurance/v1/qc/verify/code",
     "method": "POST",
     "content_type": "application/json",
     "data": {
@@ -45,7 +45,7 @@
     "desc": "规则引擎循证校验规则测试",
     "api_service": "rule",
     "api_key": "循证校验",
-    "url": "http://192.168.29.119:9000/api/rule/v1/execute/v2",
+    "url": "http://192.168.29.60:9000/api/rule/v1/execute/v2",
     "method": "POST",
     "content_type": "application/json",
     "data": {
@@ -70,7 +70,7 @@
     "desc": "规则引擎基础校验规则测试",
     "api_service": "rule",
     "api_key": "基础校验",
-    "url": "http://192.168.29.119:9000/api/rule/v1/urule/quality/basic",
+    "url": "http://192.168.29.60:9000/api/rule/v1/urule/quality/basic",
     "method": "POST",
     "content_type": "application/json",
     "data": {
@@ -95,7 +95,7 @@
     "desc": "规则引擎编码校验规则测试",
     "api_service": "rule",
     "api_key": "编码校验",
-    "url": "http://192.168.29.119:9000/api/rule/v1/urule/quality/code",
+    "url": "http://192.168.29.60:9000/api/rule/v1/urule/quality/code",
     "method": "POST",
     "content_type": "application/json",
     "data": {
