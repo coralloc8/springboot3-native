@@ -337,6 +337,7 @@ public class JsonUtil {
             INSTANCE.enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
             INSTANCE.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
 
+
             // 日期格式化
             INSTANCE.registerModules(new ParameterNamesModule(), new BladeJavaTimeModule(), new EnumModule(),
                     new String2EscapeHtml4Module());

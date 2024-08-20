@@ -158,8 +158,11 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                                   Set<String> ruleFilePrefixNames,
                                   List<RuleExecuteResponseInfoDTO> ruleResponses,
                                   Template templateIndex) {
-        Supplier<Boolean> allCompleted = () -> totalMap.entrySet().stream()
-                .allMatch(entry -> allCounter.get(entry.getKey()).get() == entry.getValue());
+        Supplier<Boolean> allCompleted = () -> {
+            log.info(">>>>>【waitAllCompleted】totalMap：{}   allCounter：{}", totalMap, allCounter);
+            return totalMap.entrySet().stream()
+                    .allMatch(entry -> allCounter.get(entry.getKey()).get() == entry.getValue());
+        };
         if (waitCompleted(allCompleted, RuleProperty.EXECUTE_TIMOUT)) {
             writeIndexFile(ruleFilePrefixNames, ruleResponses, templateIndex);
             log.info("\n######################################## 【规则执行】.【执行结束】 ########################################\n");
@@ -186,6 +189,7 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                 )
                 .subscribe(ruleExecs -> {
                             int count = ruleExecs.size();
+                            log.debug("==== ruleCode:{} count:{}", ruleConfig.getFileName(), count);
                             if (CollUtil.isEmpty(ruleExecs)) {
                                 log.info("【规则执行】.未能找到符合条件的api接口.fileName:[{}].ruleCode:[{}].【流程终止】", ruleConfig.getFileName(), ruleConfig.getRuleCode());
                                 counter.incrementAndGet();
@@ -217,7 +221,7 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                                 });
                             });
                             if (waitCompleted(() -> current.get() == count, API_TIMEOUT_SECOND)) {
-                                log.info("【规则执行】.ruleCode:[{}].计数器+1.", ruleConfig.getRuleCode());
+                                log.info("【规则执行】.ruleCode:[{} {}].计数器+1.", ruleConfig.getFileName(), ruleConfig.getDataUniqueKey());
                                 counter.incrementAndGet();
                             }
                         },
@@ -229,6 +233,8 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
 
     /**
      * 数据准备
+     * <p>
+     * todo 可以将查询文件进行查一次后做缓存优化
      *
      * @param ruleConfig
      */

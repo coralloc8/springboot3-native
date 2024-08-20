@@ -1,6 +1,5 @@
 package com.coral.test.rule.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
 import com.coral.test.rule.dto.BizRuleApplyConfigInfoDTO;
 import com.coral.test.rule.service.BizRuleApplyConfigQueryService;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +10,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 业务规则应用配置查询
@@ -27,27 +25,20 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Service
 @Slf4j
 public class BizRuleApplyConfigQueryServiceImpl implements BizRuleApplyConfigQueryService {
-
     private final static String ENABLED_RULE_SQL = "select rule_code,one_category as project,tips_node from biz_rule.rule_apply_config where status = 1;";
+
+    private final static AtomicReference<Flux<BizRuleApplyConfigInfoDTO>> CACHE = new AtomicReference<>(Flux.empty());
 
     private final R2dbcEntityTemplate template;
 
 
-    private static final List<BizRuleApplyConfigInfoDTO> BIZ_RULE_CONFIGS_CACHE = new CopyOnWriteArrayList<>();
-
     @Override
     public Flux<BizRuleApplyConfigInfoDTO> findEnabledRules() {
-        if (CollUtil.isNotEmpty(BIZ_RULE_CONFIGS_CACHE)) {
-            log.info(">>>>> 【业务规则应用配置查询】 【触发缓存】");
-            return Flux.fromIterable(BIZ_RULE_CONFIGS_CACHE);
-        }
-        log.info(">>>>> 【业务规则应用配置查询】 【实际查询数据库】");
-        // 加入缓存
-        return template.getDatabaseClient().sql(ENABLED_RULE_SQL).fetch().all()
-//                .log("findEnabledRules")
+        return CACHE.updateAndGet(current -> current.switchIfEmpty(template.getDatabaseClient().sql(ENABLED_RULE_SQL)
+                .fetch().all().cache()
                 .filter(map -> Objects.nonNull(map.get("tips_node")) &&
-                               Objects.nonNull(map.get("project")) &&
-                               Objects.nonNull(map.get("rule_code"))
+                        Objects.nonNull(map.get("project")) &&
+                        Objects.nonNull(map.get("rule_code"))
                 ).groupBy(map -> {
                     String tipsNode = (String) map.get("tips_node");
                     String project = (String) map.get("project");
@@ -68,10 +59,11 @@ public class BizRuleApplyConfigQueryServiceImpl implements BizRuleApplyConfigQue
                                 configInfo.setRuleCodes(ruleCodes);
                                 return configInfo;
                             }).defaultIfEmpty(configInfo);
-                }).doOnNext(BIZ_RULE_CONFIGS_CACHE::add)
-                .onErrorResume(error -> {
+                }).onErrorResume(error -> {
                     log.error(">>>>> 【SQL执行异常】. 查询启用的规则列表,ERROR: \n", error);
                     return Flux.empty();
-                });
+                })
+        ));
     }
+
 }

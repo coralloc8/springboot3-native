@@ -56,7 +56,7 @@ public class RuleProperty {
     private String executeConfigName;
 
 
-    public static Long EXECUTE_TIMOUT = 30 * 60L;
+    public static Long EXECUTE_TIMOUT = 2 * 60L;
     public static String RULE_PATH = "rule";
 
     public static String RULE_CONFIG_PATH = "rule-config";

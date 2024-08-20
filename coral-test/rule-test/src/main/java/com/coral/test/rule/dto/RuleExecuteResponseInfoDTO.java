@@ -184,7 +184,20 @@ public class RuleExecuteResponseInfoDTO {
     }
 
     private static String toString(Object obj) {
-        return Objects.nonNull(obj) && StringUtils.isNotBlank(obj.toString()) ? obj.toString() : "";
+        boolean notBlank = Objects.nonNull(obj) && StringUtils.isNotBlank(obj.toString());
+        if (notBlank) {
+            return obj.toString().replaceAll(" ", "").replaceAll("[\t\n\s]", ";");
+        }
+        return "";
+    }
+
+    public static void main(String[] args) {
+        String str = """
+                升主动脉内径增宽                  \s
+                        主动脉瓣钙化并反流(少量)
+                        左心室舒张功能减低
+                """;
+        System.out.println(str.replaceAll(" ", "").replaceAll("[\t\n\s]", ";"));
     }
 
 

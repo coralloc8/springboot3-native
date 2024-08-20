@@ -15,6 +15,7 @@
   "expected_result_keywords": [
   ],
   "expected_result_items": [
+    "单侧乳腺改良根治术"
   ],
   "unique_key": "primary_id",
   "select_keys": [
@@ -40,10 +41,10 @@
       "table": "dwd.dwd_misl_main",
       "unique_key": "primary_id",
       "field_mapping": {
-        "sex_code": "1",
-        "sex_name": "男",
-        "sex_code_std": "1",
-        "sex_name_std": "男性",
+        "sex_code": "2",
+        "sex_name": "女",
+        "sex_code_std": "2",
+        "sex_name_std": "女性",
         "ipt_dept_code": "A03.04",
         "ipt_dept_name": "心血管内科专业",
         "ipt_dept_code_std": "0304",
@@ -59,6 +60,11 @@
     {
       "table": "dwd.dwd_misl_diag",
       "unique_key": "primary_id",
+      "select_keys": [
+        "hosp_code",
+        "stlm_sn",
+        "primary_id"
+      ],
       "pre_sqls": [
         "delete from ${table} where hosp_code=${hosp_code} and stlm_sn=${stlm_sn};"
       ],
@@ -83,6 +89,11 @@
     {
       "table": "dwd.dwd_misl_opn",
       "unique_key": "primary_id",
+      "select_keys": [
+        "hosp_code",
+        "stlm_sn",
+        "primary_id"
+      ],
       "pre_sqls": [
         "delete from ${table} where hosp_code=${hosp_code} and stlm_sn=${stlm_sn};"
       ],

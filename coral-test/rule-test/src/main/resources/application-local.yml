@@ -57,7 +57,7 @@ springdoc:
 
 coral:
   rule:
-    execute-timout: 1800
+    execute-timout: 120
     # 规则配置路径 相对路径
     rule-config-path: rule-config
     # 规则路径（不会执行，只是放着。真正执行的时候可以将规则复制到执行路径） 相对路径

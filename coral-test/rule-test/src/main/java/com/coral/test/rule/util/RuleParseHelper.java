@@ -438,7 +438,6 @@ public class RuleParseHelper {
         String sql = "UPDATE {} SET {} where {};";
         String whereSql = buildWhereSql(required, optional, fieldMapping, setting);
         List<String> updates = new LinkedList<>();
-        String updateTemplate = "{} = {}";
         tableMap.forEach((k, v) -> {
             String fieldName = k.toString();
             boolean canUpdate = fieldMapping.containsKey(fieldName);
@@ -448,7 +447,7 @@ public class RuleParseHelper {
 
             String fieldValue = formatSqlValue(fieldMapping.get(fieldName), v);
 
-            String update = StrFormatter.format(updateTemplate, fieldName, fieldValue);
+            String update = formatUpdateSetSql(fieldName, fieldValue);
             updates.add(update);
 
             tableSettings.stream().filter(tabSetting -> {
@@ -459,7 +458,7 @@ public class RuleParseHelper {
             }).map(RuleConfigInfoDTO.Setting::getFieldMapping).forEach(map -> {
                 map.forEach((sk, sv) -> {
                     String curVal = formatSqlValue(String.valueOf(sv), sv);
-                    String curUpdate = StrFormatter.format(updateTemplate, sk, curVal);
+                    String curUpdate = formatUpdateSetSql(sk, curVal);
                     updates.add(curUpdate);
                 });
             });
@@ -564,6 +563,15 @@ public class RuleParseHelper {
             where = StrFormatter.format(valueTemplate, "'", value, "'");
         }
         return where;
+    }
+
+    private String formatUpdateSetSql(String fieldName, Object fieldValue) {
+        String template = "{} = {}";
+        String empty = "{} = NULL";
+        if (Objects.isNull(fieldValue)) {
+            return StrFormatter.format(empty, fieldName);
+        }
+        return StrFormatter.format(template, fieldName, fieldValue);
     }
 
 
