@@ -59,15 +59,18 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
     public Mono<Void> execute() {
         Optional<Template> templateReportOpt = Optional.empty();
         Optional<Template> templateIndexOpt = Optional.empty();
+        Optional<Template> templateJsonOpt = Optional.empty();
         try {
             // todo 打包成jar的情况下 目前在 流内部获取模板失败 需排查
             templateReportOpt = FreeMarkerUtils.getDefRuleReport();
             templateIndexOpt = FreeMarkerUtils.getDefRuleIndex();
+            templateJsonOpt = FreeMarkerUtils.getDefRuleJson();
         } catch (Exception e) {
             log.error(">>>>> 获取 规则报告模板失败:", e);
         }
         Optional<Template> finalTemplateOptional = templateReportOpt;
         Optional<Template> finalTemplateIndexOpt = templateIndexOpt;
+        Optional<Template> finalTemplateJsonOpt = templateJsonOpt;
         return Mono.fromFuture(CompletableFuture.runAsync(() -> {
             log.info("\n######################################## 【规则执行】.【执行开始】 ########################################\n");
             String basePath = RuleProperty.RULE_EXECUTE_PATH;
@@ -82,6 +85,10 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                     .filter(fileName -> !RuleProperty.EXECUTE_CONFIG_NAME.equalsIgnoreCase(fileName))
                     .map(fileName -> {
                         String json = RuleParseHelper.getInstance().readFileContent(basePath, fileName);
+                        // 写json文件
+                        finalTemplateJsonOpt.ifPresent(temp -> {
+                            writeJsonFile(RuleParseHelper.getInstance().parseFilePrefixName(fileName), json, temp);
+                        });
                         RuleConfigInfoDTO ruleConfigInfo = StringUtils.isBlank(json) ? null : JsonUtil.parse(json, RuleConfigInfoDTO.class);
                         if (Objects.nonNull(ruleConfigInfo)) {
                             ruleConfigInfo.setFileName(fileName);
@@ -317,7 +324,7 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
         log.info("【index文件写入】. html 文件全路径: [{}]", htmlFileName);
         try {
             List<RuleReportIndexInfoDTO> ruleReportIndexs = RuleReportIndexInfoDTO.create(ruleResponses, ruleFilePrefixNames);
-            Set<String> ruleCodes = ruleFilePrefixNames.stream().map(e -> e.substring(0, e.lastIndexOf("_"))).collect(Collectors.toSet());
+            Set<String> ruleCodes = ruleFilePrefixNames.stream().map(e -> RuleParseHelper.getInstance().parseFileRuleCode(e)).collect(Collectors.toSet());
             log.debug(">>>>> 【index文件写入】 response json数据为:\n{}", JsonUtil.toJson(ruleResponses));
             log.debug(">>>>> 【index文件写入】 json数据为:\n{}", JsonUtil.toJson(ruleReportIndexs));
             Map<String, Object> map = new HashMap<>();
@@ -337,6 +344,33 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
             log.info("【index文件写入】.创建html文件成功.");
         } catch (Exception e) {
             log.error("【index文件写入】异常.", e);
+        }
+    }
+
+    private void writeJsonFile(String filePrefixName, String json, Template templateJson) {
+        try {
+            String basePath = RuleParseHelper.getInstance().getAbsolutePathByUserDir(RuleProperty.RULE_REPORT_PATH);
+            Map<String, Object> map = new HashMap<>();
+            map.put("json", json);
+            String markdown = FreeMarkerUtils.create(templateJson, map);
+            if (StringUtils.isBlank(markdown)) {
+                log.info("【json文件写入】.创建markdown文件失败.");
+                return;
+            }
+            String jsonName = filePrefixName + "_json";
+            final String markdownFileName = Path.of(basePath, "markdown", jsonName + ".md").toString();
+            final String htmlFileName = Path.of(basePath, "html", jsonName + ".html").toString();
+            log.info("【json文件写入】. markdown 文件全路径: [{}]", markdownFileName);
+            log.info("【json文件写入】. html 文件全路径: [{}]", htmlFileName);
+            FileUtil.writeString(markdown, markdownFileName, StandardCharsets.UTF_8);
+            log.debug("【json文件写入】.markdown文件内容为：\n {}", markdown);
+            log.info("【json文件写入】.创建markdown文件成功.");
+            String html = MarkdownUtils.markdownToHtml(markdown);
+            FileUtil.writeString(html, htmlFileName, StandardCharsets.UTF_8);
+            log.debug("【json文件写入】.html文件内容为：\n {}", html);
+            log.info("【json文件写入】.创建html文件成功.");
+        } catch (Exception e) {
+            log.error("【json文件写入】异常.", e);
         }
     }
 

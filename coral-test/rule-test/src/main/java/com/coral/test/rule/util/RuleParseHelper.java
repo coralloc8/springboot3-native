@@ -47,6 +47,35 @@ public class RuleParseHelper {
 
 
     /**
+     * 解析文件前缀名 去掉.json 之类的后缀
+     *
+     * @param fileName
+     * @return
+     */
+    public String parseFilePrefixName(String fileName) {
+        return StringUtils.isBlank(fileName) ? "" : fileName.substring(0, fileName.lastIndexOf("."));
+    }
+
+    /**
+     * 解析文件名中的规则编码
+     *
+     * @param fileName
+     * @return
+     */
+    public String parseFileRuleCode(String fileName) {
+        return StringUtils.isBlank(fileName) ? "" : fileName.substring(0, fileName.indexOf("__"));
+    }
+
+    public String buildRuleResultHtmlPath(String fileName, String apiService) {
+        return fileName + "_" + apiService + ".html";
+    }
+
+    public String buildRuleJsonHtmlPath(String fileName) {
+        return fileName + "_json.html";
+    }
+
+
+    /**
      * 创建规则报表（html）
      *
      * @param markdown

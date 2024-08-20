@@ -1,6 +1,7 @@
 package com.coral.test.rule.dto;
 
 import cn.hutool.core.collection.CollUtil;
+import com.coral.test.rule.util.RuleParseHelper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,7 +39,7 @@ public class RuleReportIndexInfoDTO {
                 .collect(Collectors.groupingBy(RuleExecuteResponseInfoDTO::getRuleCode));
 
         return fileNames.stream()
-                .collect(Collectors.groupingBy(fileName -> fileName.substring(0, fileName.lastIndexOf("_"))))
+                .collect(Collectors.groupingBy(fileName -> RuleParseHelper.getInstance().parseFileRuleCode(fileName)))
                 .entrySet().stream()
                 .map(en -> {
                     List<RuleExecuteResponseInfoDTO> curResponses = ruleResponseMap.get(en.getKey());
@@ -70,8 +71,9 @@ public class RuleReportIndexInfoDTO {
                 .entrySet().stream().map(ee -> {
                     RuleResult result = new RuleResult();
                     result.setRuleFileName(ee.getKey());
+                    result.setRuleFileJsonPath(RuleParseHelper.getInstance().buildRuleJsonHtmlPath(ee.getKey()));
                     ee.getValue().forEach(eev -> {
-                        String ruleFilePath = eev.getRuleFileName() + "_" + eev.getApiService() + ".html";
+                        String ruleFilePath = RuleParseHelper.getInstance().buildRuleResultHtmlPath(eev.getRuleFileName(), eev.getApiService());
                         if (RULE_RESULT_KEY.equalsIgnoreCase(eev.getApiService())) {
                             result.setRuleTestResult(eev.getTestResult() ? MSG_SUCCESS : MSG_FAILURE);
                             result.setRuleFilePath(ruleFilePath);
@@ -98,6 +100,7 @@ public class RuleReportIndexInfoDTO {
         return fileNames.stream()
                 .map(e -> RuleResult.builder()
                         .ruleFileName(e)
+                        .ruleFileJsonPath(RuleParseHelper.getInstance().buildRuleJsonHtmlPath(e))
                         .bizTestResult(MSG_NOT_TRIGGERED)
                         .bizFilePath("")
                         .ruleTestResult(MSG_NOT_TRIGGERED)
@@ -131,6 +134,11 @@ public class RuleReportIndexInfoDTO {
          * 规则文件名
          */
         private String ruleFileName;
+
+        /**
+         * 规则json文件路径
+         */
+        private String ruleFileJsonPath;
 
         /**
          * 业务测试结果

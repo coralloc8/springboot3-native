@@ -25,6 +25,8 @@ public class FreeMarkerUtils {
 
     private static final String RULE_INDEX_TEMPLATE_NAME = "rule_index.md.ftl";
 
+    private static final String RULE_JSON_TEMPLATE_NAME = "rule_json.md.ftl";
+
     /**
      * 获取默认的规则报表模板
      *
@@ -32,6 +34,10 @@ public class FreeMarkerUtils {
      */
     public static Optional<Template> getDefRuleIndex() {
         return getTemplate(RULE_INDEX_TEMPLATE_NAME);
+    }
+
+    public static Optional<Template> getDefRuleJson() {
+        return getTemplate(RULE_JSON_TEMPLATE_NAME);
     }
 
     /**

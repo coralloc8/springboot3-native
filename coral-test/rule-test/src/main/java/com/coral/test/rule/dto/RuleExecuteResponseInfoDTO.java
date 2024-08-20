@@ -2,6 +2,7 @@ package com.coral.test.rule.dto;
 
 import cn.hutool.core.collection.CollUtil;
 import com.coral.test.rule.core.json.JsonUtil;
+import com.coral.test.rule.util.RuleParseHelper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -154,7 +155,7 @@ public class RuleExecuteResponseInfoDTO {
                         .distinct()
                         .collect(Collectors.toList());
             }
-            String fileNameWithoutType = ruleConfigInfo.getFileName().substring(0, ruleConfigInfo.getFileName().lastIndexOf("."));
+            String fileNameWithoutType = RuleParseHelper.getInstance().parseFilePrefixName(ruleConfigInfo.getFileName());
             // 数据组装
             RuleExecuteResponseInfoDTO info = RuleExecuteResponseInfoDTO.builder()
                     .ruleCode(toString(oneRuleResult.getOrDefault(ruleCodeKey, "")))
