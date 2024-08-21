@@ -21,6 +21,8 @@ ${index.ruleName!""}
 | [${result.ruleFileName}](${result.ruleFileJsonPath}) | ${(result.bizTestResult == "成功" ||  result.bizTestResult == "失败") ? string("["+result.bizTestResult+"]("+result.bizFilePath+")",result.bizTestResult)} | ${(result.ruleTestResult == "成功" ||  result.ruleTestResult == "失败") ? string("["+result.ruleTestResult+"]("+result.ruleFilePath+")",result.ruleTestResult)} |
 </#list>
 </#if>
+
+
 --------------------------
 </#list>
 </#if>
