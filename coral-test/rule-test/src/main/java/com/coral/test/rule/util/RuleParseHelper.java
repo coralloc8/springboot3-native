@@ -402,9 +402,9 @@ public class RuleParseHelper {
                                    Map tableMap, List<RuleConfigInfoDTO.Setting> tableSettings) {
         String sql = "INSERT INTO {} ({}) VALUES ({});";
         List<String> fieldNames = new LinkedList<>();
-        List<String> fieldValues = new LinkedList<>();
+        List<Object> fieldValues = new LinkedList<>();
         tableMap.forEach((k, v) -> {
-            String value = "";
+            Object value = null;
             if (k.toString().equalsIgnoreCase(setting.getUniqueKey())) {
                 value = RuleExecuteKey.getTargetValue(RuleExecuteKey.UUID, "");
             } else {
@@ -417,7 +417,12 @@ public class RuleParseHelper {
             }
         });
         String field = String.join(", ", fieldNames);
-        String value = String.join(", ", fieldValues);
+        String value = fieldValues.stream().map(e -> {
+            if (Objects.isNull(e)) {
+                return "NULL";
+            }
+            return e.toString();
+        }).collect(Collectors.joining(", "));
         return StrFormatter.format(sql, setting.getTable(), field, value);
     }
 
@@ -445,7 +450,7 @@ public class RuleParseHelper {
                 return;
             }
 
-            String fieldValue = formatSqlValue(fieldMapping.get(fieldName), v);
+            Object fieldValue = formatSqlValue(fieldMapping.get(fieldName), v);
 
             String update = formatUpdateSetSql(fieldName, fieldValue);
             updates.add(update);
@@ -457,7 +462,7 @@ public class RuleParseHelper {
                         Objects.nonNull(tabSetting.getFieldMapping());
             }).map(RuleConfigInfoDTO.Setting::getFieldMapping).forEach(map -> {
                 map.forEach((sk, sv) -> {
-                    String curVal = formatSqlValue(String.valueOf(sv), sv);
+                    Object curVal = formatSqlValue(String.valueOf(sv), sv);
                     String curUpdate = formatUpdateSetSql(sk, curVal);
                     updates.add(curUpdate);
                 });
@@ -542,7 +547,7 @@ public class RuleParseHelper {
 
         // 没值最终查询是否是特定变量
         if (Objects.isNull(value)) {
-            value = RuleExecuteKey.getTargetValue(fieldKey, (String) defValue);
+            value = RuleExecuteKey.getTargetValue(fieldKey, defValue);
         }
 
         if (formatForSql) {
@@ -552,9 +557,9 @@ public class RuleParseHelper {
     }
 
 
-    private String formatSqlValue(Object value, Object defValue) {
+    private Object formatSqlValue(Object value, Object defValue) {
         if (Objects.isNull(value)) {
-            return (String) defValue;
+            return defValue;
         }
         String valueTemplate = "{}{}{}";
         String where = value.toString();

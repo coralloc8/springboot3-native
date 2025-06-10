@@ -30,6 +30,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toSet;
+
 /**
  * 规则执行
  *
@@ -61,7 +64,7 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
         Optional<Template> templateIndexOpt = Optional.empty();
         Optional<Template> templateJsonOpt = Optional.empty();
         try {
-            // todo 打包成jar的情况下 目前在 流内部获取模板失败 需排查
+            // 打包成jar的情况下 目前在 流内部获取模板失败 需排查
             templateReportOpt = FreeMarkerUtils.getDefRuleReport();
             templateIndexOpt = FreeMarkerUtils.getDefRuleIndex();
             templateJsonOpt = FreeMarkerUtils.getDefRuleJson();
@@ -105,7 +108,7 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
             // 需要执行的规则 编码集合
             Set<String> ruleFilePrefixNames = ruleConfigReqs.stream()
                     .map(e -> e.getFileName().substring(0, e.getFileName().lastIndexOf(".")))
-                    .collect(Collectors.toSet());
+                    .collect(toSet());
 
             // 执行文件
             String json = RuleParseHelper.getInstance().readFileContent(basePath, RuleProperty.EXECUTE_CONFIG_NAME);
@@ -116,7 +119,11 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
             final List<RuleExecuteInfoDTO> ruleExecutes = JsonUtil.parseArray(json, RuleExecuteInfoDTO.class);
 
             Map<String, List<RuleConfigInfoDTO>> ruleConfigGroupMap = ruleConfigReqs.stream().collect(Collectors.groupingBy(RuleConfigInfoDTO::getDataUniqueKey));
-            log.info("【规则执行】.根据数据唯一键分组后的key为: {}.", ruleConfigGroupMap.keySet());
+
+            Map<String, Set<String>> ruleKeyWithFileNameMap = ruleConfigReqs.stream().collect(Collectors.groupingBy(RuleConfigInfoDTO::getDataUniqueKey,
+                    mapping(RuleConfigInfoDTO::getFileName, toSet())
+            ));
+            log.info("【规则执行】.根据数据唯一键分组后的key为: {}.", JsonUtil.toJson(ruleKeyWithFileNameMap));
 
             // 总数
             Map<String, Integer> totalMap = ruleConfigGroupMap.entrySet().stream()
@@ -159,7 +166,7 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
                                   List<RuleExecuteResponseInfoDTO> ruleResponses,
                                   Template templateIndex) {
         Supplier<Boolean> allCompleted = () -> {
-            log.info(">>>>>【waitAllCompleted】totalMap：{}   allCounter：{}", totalMap, allCounter);
+            log.warn(">>>>>【waitAllCompleted】totalMap：{}   allCounter：{}", totalMap, allCounter);
             return totalMap.entrySet().stream()
                     .allMatch(entry -> allCounter.get(entry.getKey()).get() == entry.getValue());
         };
@@ -330,7 +337,7 @@ public class RuleExecuteServiceImpl implements RuleExecuteService {
         log.info("【index文件写入】. html 文件全路径: [{}]", htmlFileName);
         try {
             List<RuleReportIndexInfoDTO> ruleReportIndexs = RuleReportIndexInfoDTO.create(ruleResponses, ruleFilePrefixNames);
-            Set<String> ruleCodes = ruleFilePrefixNames.stream().map(e -> RuleParseHelper.getInstance().parseFileRuleCode(e)).collect(Collectors.toSet());
+            Set<String> ruleCodes = ruleFilePrefixNames.stream().map(e -> RuleParseHelper.getInstance().parseFileRuleCode(e)).collect(toSet());
             log.debug(">>>>> 【index文件写入】 response json数据为:\n{}", JsonUtil.toJson(ruleResponses));
             log.debug(">>>>> 【index文件写入】 json数据为:\n{}", JsonUtil.toJson(ruleReportIndexs));
             Map<String, Object> map = new HashMap<>();

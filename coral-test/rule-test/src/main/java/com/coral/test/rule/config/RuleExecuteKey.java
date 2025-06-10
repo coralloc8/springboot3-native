@@ -31,7 +31,7 @@ public interface RuleExecuteKey {
      * @param key
      * @return
      */
-    static String getTargetValue(String key, String defVal) {
+    static Object getTargetValue(String key, Object defVal) {
         if (StringUtils.isBlank(key)) {
             return defVal;
         }
